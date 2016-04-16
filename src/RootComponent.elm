@@ -1,43 +1,40 @@
 module RootComponent (..) where
 
-import Effects exposing (Effects)
 import Html exposing (..)
-import Graphics.Element exposing (show)
+import Color exposing (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element exposing (Element)
 import History exposing (Timeline)
 import Data exposing (timeline)
 
 
--- MODEL
-
-
 type alias Model =
-  { timeline : Timeline }
+  { timeline : Timeline
+  , height : Int
+  , width : Int
+  }
 
 
-init : ( Model, Effects Action )
+init : Model
 init =
-  ( { timeline = timeline }, Effects.none )
+  { timeline = timeline
+  , height = 600
+  , width = 800
+  }
 
 
-
--- UPDATE
-
-
-type Action
-  = NoOp
+update : ( Int, Int ) -> Model -> Model
+update ( w, h ) model =
+  { model | width = w, height = h }
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
-    NoOp ->
-      ( model, Effects.none )
-
-
-
--- VIEW
-
-
-view : Signal.Address Action -> Model -> Html
-view address model =
-  fromElement <| show "Hello, world!"
+view : Model -> Element
+view model =
+  collage
+    model.width
+    model.height
+    [ rect (toFloat model.width) (toFloat model.height)
+        |> filled (rgb 234 258 258)
+    , segment ( -5.0, 0.0 ) ( 5.0, 0.0 )
+        |> traced (solid darkCharcoal)
+    ]

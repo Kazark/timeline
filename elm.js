@@ -8395,202 +8395,85 @@ Elm.Json.Decode.make = function (_elm) {
                                     ,value: value
                                     ,customDecoder: customDecoder};
 };
-Elm.Native.Effects = {};
-Elm.Native.Effects.make = function(localRuntime) {
-
+Elm.Native = Elm.Native || {};
+Elm.Native.Window = {};
+Elm.Native.Window.make = function make(localRuntime) {
 	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Effects = localRuntime.Native.Effects || {};
-	if (localRuntime.Native.Effects.values)
+	localRuntime.Native.Window = localRuntime.Native.Window || {};
+	if (localRuntime.Native.Window.values)
 	{
-		return localRuntime.Native.Effects.values;
+		return localRuntime.Native.Window.values;
 	}
 
-	var Task = Elm.Native.Task.make(localRuntime);
-	var Utils = Elm.Native.Utils.make(localRuntime);
-	var Signal = Elm.Signal.make(localRuntime);
-	var List = Elm.Native.List.make(localRuntime);
+	var NS = Elm.Native.Signal.make(localRuntime);
+	var Tuple2 = Elm.Native.Utils.make(localRuntime).Tuple2;
 
 
-	// polyfill so things will work even if rAF is not available for some reason
-	var _requestAnimationFrame =
-		typeof requestAnimationFrame !== 'undefined'
-			? requestAnimationFrame
-			: function(cb) { setTimeout(cb, 1000 / 60); }
-			;
-
-
-	// batchedSending and sendCallback implement a small state machine in order
-	// to schedule only one send(time) call per animation frame.
-	//
-	// Invariants:
-	// 1. In the NO_REQUEST state, there is never a scheduled sendCallback.
-	// 2. In the PENDING_REQUEST and EXTRA_REQUEST states, there is always exactly
-	//    one scheduled sendCallback.
-	var NO_REQUEST = 0;
-	var PENDING_REQUEST = 1;
-	var EXTRA_REQUEST = 2;
-	var state = NO_REQUEST;
-	var messageArray = [];
-
-
-	function batchedSending(address, tickMessages)
+	function getWidth()
 	{
-		// insert ticks into the messageArray
-		var foundAddress = false;
+		return localRuntime.node.clientWidth;
+	}
 
-		for (var i = messageArray.length; i--; )
+
+	function getHeight()
+	{
+		if (localRuntime.isFullscreen())
 		{
-			if (messageArray[i].address === address)
+			return window.innerHeight;
+		}
+		return localRuntime.node.clientHeight;
+	}
+
+
+	var dimensions = NS.input('Window.dimensions', Tuple2(getWidth(), getHeight()));
+
+
+	function resizeIfNeeded()
+	{
+		// Do not trigger event if the dimensions have not changed.
+		// This should be most of the time.
+		var w = getWidth();
+		var h = getHeight();
+		if (dimensions.value._0 === w && dimensions.value._1 === h)
+		{
+			return;
+		}
+
+		setTimeout(function() {
+			// Check again to see if the dimensions have changed.
+			// It is conceivable that the dimensions have changed
+			// again while some other event was being processed.
+			w = getWidth();
+			h = getHeight();
+			if (dimensions.value._0 === w && dimensions.value._1 === h)
 			{
-				foundAddress = true;
-				messageArray[i].tickMessages = A3(List.foldl, List.cons, messageArray[i].tickMessages, tickMessages);
-				break;
+				return;
 			}
-		}
-
-		if (!foundAddress)
-		{
-			messageArray.push({ address: address, tickMessages: tickMessages });
-		}
-
-		// do the appropriate state transition
-		switch (state)
-		{
-			case NO_REQUEST:
-				_requestAnimationFrame(sendCallback);
-				state = PENDING_REQUEST;
-				break;
-			case PENDING_REQUEST:
-				state = PENDING_REQUEST;
-				break;
-			case EXTRA_REQUEST:
-				state = PENDING_REQUEST;
-				break;
-		}
+			localRuntime.notify(dimensions.id, Tuple2(w, h));
+		}, 0);
 	}
 
 
-	function sendCallback(time)
-	{
-		switch (state)
-		{
-			case NO_REQUEST:
-				// This state should not be possible. How can there be no
-				// request, yet somehow we are actively fulfilling a
-				// request?
-				throw new Error(
-					'Unexpected send callback.\n' +
-					'Please report this to <https://github.com/evancz/elm-effects/issues>.'
-				);
-
-			case PENDING_REQUEST:
-				// At this point, we do not *know* that another frame is
-				// needed, but we make an extra request to rAF just in
-				// case. It's possible to drop a frame if rAF is called
-				// too late, so we just do it preemptively.
-				_requestAnimationFrame(sendCallback);
-				state = EXTRA_REQUEST;
-
-				// There's also stuff we definitely need to send.
-				send(time);
-				return;
-
-			case EXTRA_REQUEST:
-				// Turns out the extra request was not needed, so we will
-				// stop calling rAF. No reason to call it all the time if
-				// no one needs it.
-				state = NO_REQUEST;
-				return;
-		}
-	}
+	localRuntime.addListener([dimensions.id], window, 'resize', resizeIfNeeded);
 
 
-	function send(time)
-	{
-		for (var i = messageArray.length; i--; )
-		{
-			var messages = A3(
-				List.foldl,
-				F2( function(toAction, list) { return List.Cons(toAction(time), list); } ),
-				List.Nil,
-				messageArray[i].tickMessages
-			);
-			Task.perform( A2(Signal.send, messageArray[i].address, messages) );
-		}
-		messageArray = [];
-	}
-
-
-	function requestTickSending(address, tickMessages)
-	{
-		return Task.asyncFunction(function(callback) {
-			batchedSending(address, tickMessages);
-			callback(Task.succeed(Utils.Tuple0));
-		});
-	}
-
-
-	return localRuntime.Native.Effects.values = {
-		requestTickSending: F2(requestTickSending)
+	return localRuntime.Native.Window.values = {
+		dimensions: dimensions,
+		resizeIfNeeded: resizeIfNeeded
 	};
-
 };
 
-Elm.Effects = Elm.Effects || {};
-Elm.Effects.make = function (_elm) {
+Elm.Window = Elm.Window || {};
+Elm.Window.make = function (_elm) {
    "use strict";
-   _elm.Effects = _elm.Effects || {};
-   if (_elm.Effects.values) return _elm.Effects.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Native$Effects = Elm.Native.Effects.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   _elm.Window = _elm.Window || {};
+   if (_elm.Window.values) return _elm.Window.values;
+   var _U = Elm.Native.Utils.make(_elm),$Basics = Elm.Basics.make(_elm),$Native$Window = Elm.Native.Window.make(_elm),$Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var ignore = function (task) {    return A2($Task.map,$Basics.always({ctor: "_Tuple0"}),task);};
-   var requestTickSending = $Native$Effects.requestTickSending;
-   var toTaskHelp = F3(function (address,effect,_p0) {
-      var _p1 = _p0;
-      var _p5 = _p1._1;
-      var _p4 = _p1;
-      var _p3 = _p1._0;
-      var _p2 = effect;
-      switch (_p2.ctor)
-      {case "Task": var reporter = A2($Task.andThen,_p2._0,function (answer) {    return A2($Signal.send,address,_U.list([answer]));});
-           return {ctor: "_Tuple2",_0: A2($Task.andThen,_p3,$Basics.always(ignore($Task.spawn(reporter)))),_1: _p5};
-         case "Tick": return {ctor: "_Tuple2",_0: _p3,_1: A2($List._op["::"],_p2._0,_p5)};
-         case "None": return _p4;
-         default: return A3($List.foldl,toTaskHelp(address),_p4,_p2._0);}
-   });
-   var toTask = F2(function (address,effect) {
-      var _p6 = A3(toTaskHelp,address,effect,{ctor: "_Tuple2",_0: $Task.succeed({ctor: "_Tuple0"}),_1: _U.list([])});
-      var combinedTask = _p6._0;
-      var tickMessages = _p6._1;
-      return $List.isEmpty(tickMessages) ? combinedTask : A2($Task.andThen,combinedTask,$Basics.always(A2(requestTickSending,address,tickMessages)));
-   });
-   var Never = function (a) {    return {ctor: "Never",_0: a};};
-   var Batch = function (a) {    return {ctor: "Batch",_0: a};};
-   var batch = Batch;
-   var None = {ctor: "None"};
-   var none = None;
-   var Tick = function (a) {    return {ctor: "Tick",_0: a};};
-   var tick = Tick;
-   var Task = function (a) {    return {ctor: "Task",_0: a};};
-   var task = Task;
-   var map = F2(function (func,effect) {
-      var _p7 = effect;
-      switch (_p7.ctor)
-      {case "Task": return Task(A2($Task.map,func,_p7._0));
-         case "Tick": return Tick(function (_p8) {    return func(_p7._0(_p8));});
-         case "None": return None;
-         default: return Batch(A2($List.map,map(func),_p7._0));}
-   });
-   return _elm.Effects.values = {_op: _op,none: none,task: task,tick: tick,map: map,batch: batch,toTask: toTask};
+   var dimensions = $Native$Window.dimensions;
+   var width = A2($Signal.map,$Basics.fst,dimensions);
+   var height = A2($Signal.map,$Basics.snd,dimensions);
+   return _elm.Window.values = {_op: _op,dimensions: dimensions,width: width,height: height};
 };
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
@@ -10458,45 +10341,6 @@ Elm.Html.make = function (_elm) {
                              ,menuitem: menuitem
                              ,menu: menu};
 };
-Elm.StartApp = Elm.StartApp || {};
-Elm.StartApp.make = function (_elm) {
-   "use strict";
-   _elm.StartApp = _elm.StartApp || {};
-   if (_elm.StartApp.values) return _elm.StartApp.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var start = function (config) {
-      var updateStep = F2(function (action,_p0) {
-         var _p1 = _p0;
-         var _p2 = A2(config.update,action,_p1._0);
-         var newModel = _p2._0;
-         var additionalEffects = _p2._1;
-         return {ctor: "_Tuple2",_0: newModel,_1: $Effects.batch(_U.list([_p1._1,additionalEffects]))};
-      });
-      var update = F2(function (actions,_p3) {    var _p4 = _p3;return A3($List.foldl,updateStep,{ctor: "_Tuple2",_0: _p4._0,_1: $Effects.none},actions);});
-      var messages = $Signal.mailbox(_U.list([]));
-      var singleton = function (action) {    return _U.list([action]);};
-      var address = A2($Signal.forwardTo,messages.address,singleton);
-      var inputs = $Signal.mergeMany(A2($List._op["::"],messages.signal,A2($List.map,$Signal.map(singleton),config.inputs)));
-      var effectsAndModel = A3($Signal.foldp,update,config.init,inputs);
-      var model = A2($Signal.map,$Basics.fst,effectsAndModel);
-      return {html: A2($Signal.map,config.view(address),model)
-             ,model: model
-             ,tasks: A2($Signal.map,function (_p5) {    return A2($Effects.toTask,messages.address,$Basics.snd(_p5));},effectsAndModel)};
-   };
-   var App = F3(function (a,b,c) {    return {html: a,model: b,tasks: c};});
-   var Config = F4(function (a,b,c,d) {    return {init: a,update: b,view: c,inputs: d};});
-   return _elm.StartApp.values = {_op: _op,start: start,Config: Config,App: App};
-};
 Elm.History = Elm.History || {};
 Elm.History.make = function (_elm) {
    "use strict";
@@ -10555,23 +10399,30 @@ Elm.RootComponent.make = function (_elm) {
    if (_elm.RootComponent.values) return _elm.RootComponent.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
    $Data = Elm.Data.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $History = Elm.History.make(_elm),
-   $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var view = F2(function (address,model) {    return $Html.fromElement($Graphics$Element.show("Hello, world!"));});
-   var update = F2(function (action,model) {    var _p0 = action;return {ctor: "_Tuple2",_0: model,_1: $Effects.none};});
-   var NoOp = {ctor: "NoOp"};
-   var init = {ctor: "_Tuple2",_0: {timeline: $Data.timeline},_1: $Effects.none};
-   var Model = function (a) {    return {timeline: a};};
-   return _elm.RootComponent.values = {_op: _op,Model: Model,init: init,NoOp: NoOp,update: update,view: view};
+   var view = function (model) {
+      return A3($Graphics$Collage.collage,
+      model.width,
+      model.height,
+      _U.list([A2($Graphics$Collage.filled,A3($Color.rgb,234,258,258),A2($Graphics$Collage.rect,$Basics.toFloat(model.width),$Basics.toFloat(model.height)))
+              ,A2($Graphics$Collage.traced,
+              $Graphics$Collage.solid($Color.darkCharcoal),
+              A2($Graphics$Collage.segment,{ctor: "_Tuple2",_0: -5.0,_1: 0.0},{ctor: "_Tuple2",_0: 5.0,_1: 0.0}))]));
+   };
+   var update = F2(function (_p0,model) {    var _p1 = _p0;return _U.update(model,{width: _p1._0,height: _p1._1});});
+   var init = {timeline: $Data.timeline,height: 600,width: 800};
+   var Model = F3(function (a,b,c) {    return {timeline: a,height: b,width: c};});
+   return _elm.RootComponent.values = {_op: _op,Model: Model,init: init,update: update,view: view};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
@@ -10581,18 +10432,14 @@ Elm.Main.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Html = Elm.Html.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $RootComponent = Elm.RootComponent.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $StartApp = Elm.StartApp.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Window = Elm.Window.make(_elm);
    var _op = {};
-   var app = $StartApp.start({view: $RootComponent.view,update: $RootComponent.update,init: $RootComponent.init,inputs: _U.list([])});
-   var main = app.html;
-   var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",app.tasks);
-   return _elm.Main.values = {_op: _op,app: app,main: main};
+   var main = A2($Signal.map,$RootComponent.view,A3($Signal.foldp,$RootComponent.update,$RootComponent.init,$Window.dimensions));
+   return _elm.Main.values = {_op: _op,main: main};
 };
