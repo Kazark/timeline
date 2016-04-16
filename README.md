@@ -13,4 +13,6 @@ Build project:
 
 Navigate to <http://localhost:5000> (which loads your `index.html`).
 
-**Note:** Make your edits to `index.template.html` and consider `index.html` an ephemeral file. This is because index.html gets overwritten easily. For example, `elm make` overwrites it by default.
+**Note:** Make your edits to `index.template.html` and consider `index.html` an
+ephemeral file. This is because index.html gets overwritten easily. For
+example, `elm make` overwrites it by default.

@@ -1,38 +1,43 @@
-
-module RootComponent where
+module RootComponent (..) where
 
 import Effects exposing (Effects)
 import Html exposing (..)
+import Graphics.Element exposing (show)
+import History exposing (Timeline)
+import Data exposing (timeline)
+
 
 -- MODEL
 
-type alias Model =
-  {
-  }
 
-init : (Model, Effects Action)
+type alias Model =
+  { timeline : Timeline }
+
+
+init : ( Model, Effects Action )
 init =
-  ({}, Effects.none)
+  ( { timeline = timeline }, Effects.none )
+
+
 
 -- UPDATE
+
 
 type Action
   = NoOp
 
-update : Action -> Model -> (Model, Effects Action)
+
+update : Action -> Model -> ( Model, Effects Action )
 update action model =
   case action of
     NoOp ->
-      (model, Effects.none)
+      ( model, Effects.none )
+
+
 
 -- VIEW
 
+
 view : Signal.Address Action -> Model -> Html
 view address model =
-  div
-  []
-  [ text "Hello, world!"
-  ]
-
-(=>) : a -> b -> (a, b)
-(=>) = (,)
+  fromElement <| show "Hello, world!"
