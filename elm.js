@@ -10408,21 +10408,43 @@ Elm.RootComponent.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Text = Elm.Text.make(_elm);
    var _op = {};
-   var view = function (model) {
-      return A3($Graphics$Collage.collage,
-      model.width,
-      model.height,
-      _U.list([A2($Graphics$Collage.filled,A3($Color.rgb,234,258,258),A2($Graphics$Collage.rect,$Basics.toFloat(model.width),$Basics.toFloat(model.height)))
-              ,A2($Graphics$Collage.traced,
-              $Graphics$Collage.solid($Color.darkCharcoal),
-              A2($Graphics$Collage.segment,{ctor: "_Tuple2",_0: -5.0,_1: 0.0},{ctor: "_Tuple2",_0: 5.0,_1: 0.0}))]));
+   var background = function (model) {
+      return A2($Graphics$Collage.filled,A3($Color.rgb,244,255,255),A2($Graphics$Collage.rect,$Basics.toFloat(model.width),$Basics.toFloat(model.height)));
    };
+   var axisSegment = F2(function (pt1,pt2) {
+      return A2($Graphics$Collage.traced,$Graphics$Collage.solid($Color.darkCharcoal),A2($Graphics$Collage.segment,pt1,pt2));
+   });
+   var drawTimeAxis = function (model) {
+      var halfRange = $Basics.floor($Basics.toFloat(model.timeline.finish - model.timeline.start) / 2);
+      var centralDate = model.timeline.start + halfRange;
+      var halfAxis = $Basics.toFloat(model.width) / 2.0 - 15.0;
+      return _U.list([A2(axisSegment,{ctor: "_Tuple2",_0: 0 - halfAxis,_1: 0.0},{ctor: "_Tuple2",_0: halfAxis,_1: 0.0})
+                     ,A2(axisSegment,{ctor: "_Tuple2",_0: 0 - halfAxis,_1: -10.0},{ctor: "_Tuple2",_0: 0 - halfAxis,_1: 10.0})
+                     ,A2(axisSegment,{ctor: "_Tuple2",_0: 0.0,_1: -10.0},{ctor: "_Tuple2",_0: 0.0,_1: 10.0})
+                     ,A2($Graphics$Collage.move,{ctor: "_Tuple2",_0: 0.0,_1: -15.0},$Graphics$Collage.text($Text.fromString($Basics.toString(centralDate))))
+                     ,A2(axisSegment,{ctor: "_Tuple2",_0: halfAxis,_1: -10.0},{ctor: "_Tuple2",_0: halfAxis,_1: 10.0})]);
+   };
+   var view = function (model) {    return A3($Graphics$Collage.collage,model.width,model.height,A2($List._op["::"],background(model),drawTimeAxis(model)));};
+   var Decade = {ctor: "Decade"};
+   var Year = {ctor: "Year"};
+   var Month = {ctor: "Month"};
    var update = F2(function (_p0,model) {    var _p1 = _p0;return _U.update(model,{width: _p1._0,height: _p1._1});});
    var init = {timeline: $Data.timeline,height: 600,width: 800};
    var Model = F3(function (a,b,c) {    return {timeline: a,height: b,width: c};});
-   return _elm.RootComponent.values = {_op: _op,Model: Model,init: init,update: update,view: view};
+   return _elm.RootComponent.values = {_op: _op
+                                      ,Model: Model
+                                      ,init: init
+                                      ,update: update
+                                      ,Month: Month
+                                      ,Year: Year
+                                      ,Decade: Decade
+                                      ,axisSegment: axisSegment
+                                      ,drawTimeAxis: drawTimeAxis
+                                      ,background: background
+                                      ,view: view};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
