@@ -160,6 +160,234 @@ davidBrainerd =
   { from = brainerdBorn, to = brainerdDied, label = "David Brainerd" }
 
 
+swinnockBorn =
+  duringYear 1627
+
+
+swinnockDied =
+  duringYear 1673
+
+
+georgeSwinnock =
+  { from = swinnockBorn, to = swinnockDied, label = "George Swinnock" }
+
+
+sibbesBorn =
+  duringYear 1577
+
+
+sibbesDied =
+  duringYear 1635
+
+
+richardSibbes =
+  { from = sibbesBorn, to = sibbesDied, label = "Richard Sibbes" }
+
+
+cottonBorn =
+  on 1585 Dec 4
+
+
+cottonDied =
+  on 1652 Dec 23
+
+
+johnCotton =
+  { from = cottonBorn, to = cottonDied, label = "John Cotton" }
+
+
+rmatherBorn =
+  duringYear 1596
+
+
+rmatherDied =
+  on 1669 Apr 22
+
+
+richardMather =
+  { from = rmatherBorn, to = rmatherDied, label = "Richard Mather" }
+
+
+imatherBorn =
+  on 1639 Jun 21
+
+
+imatherDied =
+  on 1723 Aug 23
+
+
+increaseMather =
+  { from = imatherBorn, to = imatherDied, label = "Increase Mather" }
+
+
+cmatherBorn =
+  on 1663 Feb 12
+
+
+cmatherDied =
+  on 1728 Feb 13
+
+
+cottonMather =
+  { from = cmatherBorn, to = cmatherDied, label = "Cotton Mather" }
+
+
+charnockBorn =
+  duringYear 1628
+
+
+charnockDied =
+  duringYear 1680
+
+
+stephenCharnock =
+  { from = charnockBorn, to = charnockDied, label = "Stephen Charnock" }
+
+
+knoxBorn =
+  duringYear 1513
+
+
+knoxDied =
+  on 1572 Nov 24
+
+
+johnKnox =
+  { from = knoxBorn, to = knoxDied, label = "John Knox" }
+
+
+renwickBorn =
+  on 1662 Feb 15
+
+
+renwickDied =
+  on 1688 Feb 17
+
+
+jamesRenwick =
+  { from = renwickBorn, to = renwickDied, label = "James Renwick" }
+
+
+tyndaleBorn =
+  duringYear 1494
+
+
+tyndaleDied =
+  duringYear 1536
+
+
+williamTyndale =
+  { from = tyndaleBorn, to = tyndaleDied, label = "William Tyndale" }
+
+
+wycliffeBorn =
+  duringYear 1320
+
+
+wycliffeDied =
+  on 1384 Dec 31
+
+
+johnWycliffe =
+  { from = wycliffeBorn, to = wycliffeDied, label = "John Wycliffe" }
+
+
+husBorn =
+  duringYear 1369
+
+
+husDied =
+  on 1415 Jul 6
+
+
+janHus =
+  { from = husBorn, to = husDied, label = "Jan Hus" }
+
+
+lutherBorn =
+  on 1483 Nov 10
+
+
+lutherDied =
+  on 1546 Feb 18
+
+
+martinLuther =
+  { from = lutherBorn, to = lutherDied, label = "Martin Luther" }
+
+
+zwingliBorn =
+  on 1484 Jan 1
+
+
+zwingliDied =
+  on 1531 Oct 11
+
+
+huldrychZwingli =
+  { from = zwingliBorn, to = zwingliDied, label = "Huldrych Zwingli" }
+
+
+calvinBorn =
+  on 1509 Jul 10
+
+
+calvinDied =
+  on 1564 May 27
+
+
+johnCalvin =
+  { from = calvinBorn, to = calvinDied, label = "John Calvin" }
+
+
+bezaBorn =
+  on 1519 Jun 24
+
+
+bezaDied =
+  on 1605 Oct 13
+
+
+theodoreBeza =
+  { from = bezaBorn, to = bezaDied, label = "Theodore Beza" }
+
+
+melanchthonBorn =
+  on 1497 Feb 16
+
+
+melanchthonDied =
+  on 1560 Apr 19
+
+
+philipMelanchthon =
+  { from = melanchthonBorn, to = melanchthonDied, label = "Philip Melanchthon" }
+
+
+ursinusBorn =
+  on 1534 Jul 18
+
+
+ursinusDied =
+  on 1583 May 6
+
+
+zachariasUrsinus =
+  { from = ursinusBorn, to = ursinusDied, label = "Zacharias Ursinus" }
+
+
+abrakelBorn =
+  on 1635 Jan 2
+
+
+abrakelDied =
+  on 1711 Oct 30
+
+
+wilhelmusABrakel =
+  { from = abrakelBorn, to = abrakelDied, label = "Wilhelmus a Brakel" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -176,6 +404,25 @@ timeline =
       , francisTurretin
       , hermannWitsius
       , davidBrainerd
+      , georgeSwinnock
+      , richardMather
+      , increaseMather
+      , cottonMather
+      , richardSibbes
+      , johnCotton
+      , stephenCharnock
+      , johnKnox
+      , jamesRenwick
+      , williamTyndale
+      , johnWycliffe
+      , janHus
+      , martinLuther
+      , huldrychZwingli
+      , johnCalvin
+      , theodoreBeza
+      , philipMelanchthon
+      , zachariasUrsinus
+      , wilhelmusABrakel
       ]
   , events = []
   }

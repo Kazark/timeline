@@ -59,7 +59,7 @@ init : Model
 init =
   { timeline = timeline
   , centralYear = 1650
-  , height = 600
+  , height = 650
   , width = 800
   , unit = 10.0
   , zoom = Year
@@ -194,7 +194,10 @@ drawTimeSpan model index timeSpan =
       toFloat (timeSpan.to.year - timeSpan.from.year) / 2.0 * model.unit + begin
 
     labelAtY =
-      height + (model.unit * vSign)
+      if vSign == 1 then
+        height + model.unit
+      else
+        height - (0.6 * model.unit)
   in
     [ spanSegment model.colorscheme ( begin, height ) ( end, height )
     , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
