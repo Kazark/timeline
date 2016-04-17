@@ -58,11 +58,11 @@ axisSegment pt1 pt2 =
   segment pt1 pt2 |> traced (solid darkCharcoal)
 
 
-spanLabel : Float -> String -> Form
-spanLabel xpos label =
+spanLabel : Float -> Float -> String -> Form
+spanLabel xpos ypos label =
   fromString label
     |> text
-    |> move ( xpos, 30.0 )
+    |> move ( xpos, ypos )
 
 
 yearLabel : Float -> Int -> Form
@@ -122,8 +122,8 @@ spanSegment pt1 pt2 =
   segment pt1 pt2 |> traced (solid darkBlue)
 
 
-drawTimeSpan : Model -> TimeSpan -> List Form
-drawTimeSpan model timeSpan =
+drawTimeSpan : Model -> Int -> TimeSpan -> List Form
+drawTimeSpan model index timeSpan =
   let
     begin =
       toFloat (timeSpan.from.year - model.centralYear)
@@ -133,19 +133,31 @@ drawTimeSpan model timeSpan =
       toFloat (timeSpan.to.year - model.centralYear)
         * model.unit
 
-    labelAt =
+    height =
+      (toFloat (index + 1) * model.unit * 2.0) - (model.unit * 0.5)
+
+    heightPlus =
+      height + (model.unit * 0.5)
+
+    heightMinus =
+      height - (model.unit * 0.5)
+
+    labelAtX =
       toFloat (timeSpan.to.year - timeSpan.from.year) / 2.0 * model.unit + begin
+
+    labelAtY =
+      height + model.unit
   in
-    [ spanSegment ( begin, 2 * model.unit ) ( end, 2 * model.unit )
-    , spanSegment ( begin, 2.5 * model.unit ) ( begin, 1.5 * model.unit )
-    , spanSegment ( end, 2.5 * model.unit ) ( end, 1.5 * model.unit )
-    , spanLabel labelAt timeSpan.label
+    [ spanSegment ( begin, height ) ( end, height )
+    , spanSegment ( begin, heightPlus ) ( begin, heightMinus )
+    , spanSegment ( end, heightPlus ) ( end, heightMinus )
+    , spanLabel labelAtX labelAtY timeSpan.label
     ]
 
 
 drawTimeSpans : Model -> List Form
 drawTimeSpans model =
-  List.map (drawTimeSpan model) model.timeline.timeSpans
+  List.indexedMap (drawTimeSpan model) model.timeline.timeSpans
     |> List.concat
 
 
@@ -154,7 +166,7 @@ background model =
   [ rect
       (toFloat model.width)
       (toFloat model.height)
-      |> filled (rgb 244 255 255)
+      |> filled lightGray
   ]
 
 
