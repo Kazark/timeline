@@ -18,7 +18,7 @@ johnOwen =
 
 timeline : Timeline
 timeline =
-  { start = 1500
+  { start = 1600
   , finish = 1700
   , timeSpans = [ johnOwen ]
   , events = []
