@@ -388,6 +388,138 @@ wilhelmusABrakel =
   { from = abrakelBorn, to = abrakelDied, label = "Wilhelmus a Brakel" }
 
 
+waldoBorn =
+  duringYear 1140
+
+
+waldoDied =
+  duringYear 1205
+
+
+peterWaldo =
+  { from = waldoBorn, to = waldoDied, label = "Peter Waldo" }
+
+
+edwardsBorn =
+  on 1703 Oct 5
+
+
+edwardsDied =
+  on 1758 Mar 22
+
+
+jonathanEdwards =
+  { from = edwardsBorn, to = edwardsDied, label = "Jonathan Edwards" }
+
+
+ballBorn =
+  duringMonth 1585 Oct
+
+
+ballDied =
+  on 1640 Oct 20
+
+
+johnBall =
+  { from = ballBorn, to = ballDied, label = "John Ball" }
+
+
+ryleBorn =
+  on 1816 May 10
+
+
+ryleDied =
+  on 1900 Jun 10
+
+
+jcRyle =
+  { from = ryleBorn, to = ryleDied, label = "JC Ryle" }
+
+
+chodgeBorn =
+  on 1797 Dec 27
+
+
+chodgeDied =
+  on 1878 Jun 19
+
+
+charlesHodge =
+  { from = chodgeBorn, to = chodgeDied, label = "Charles Hodge" }
+
+
+bavinckBorn =
+  on 1854 Dec 13
+
+
+bavinckDied =
+  on 1921 Jul 29
+
+
+hermanBavinck =
+  { from = bavinckBorn, to = bavinckDied, label = "Herman Bavinck" }
+
+
+gvosBorn =
+  on 1862 Mar 14
+
+
+gvosDied =
+  on 1949 Aug 13
+
+
+geerhardusVos =
+  { from = gvosBorn, to = gvosDied, label = "Geerhardus Vos" }
+
+
+vantilBorn =
+  on 1895 May 3
+
+
+vantilDied =
+  on 1987 Apr 17
+
+
+corneliusVanTil =
+  { from = vantilBorn, to = vantilDied, label = "Cornelius Van Til" }
+
+
+murrayBorn =
+  on 1898 Oct 14
+
+
+murrayDied =
+  on 1975 May 8
+
+
+johnMurray =
+  { from = murrayBorn, to = murrayDied, label = "John Murray" }
+
+
+machenBorn =
+  on 1881 Jul 28
+
+
+machenDied =
+  on 1937 Jan 1
+
+
+jGreshamMachen =
+  { from = machenBorn, to = machenDied, label = "J Gresham Machen" }
+
+
+burroughsBorn =
+  duringYear 1600
+
+
+burroughsDied =
+  on 1646 Nov 13
+
+
+jeremiahBurroughs =
+  { from = burroughsBorn, to = burroughsDied, label = "Jeremiah Burroughs" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -423,6 +555,17 @@ timeline =
       , philipMelanchthon
       , zachariasUrsinus
       , wilhelmusABrakel
+      , peterWaldo
+      , jonathanEdwards
+      , johnBall
+      , jcRyle
+      , charlesHodge
+      , hermanBavinck
+      , geerhardusVos
+      , corneliusVanTil
+      , johnMurray
+      , jGreshamMachen
+      , jeremiahBurroughs
       ]
   , events = []
   }
