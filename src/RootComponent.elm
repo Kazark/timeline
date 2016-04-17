@@ -3,35 +3,41 @@ module RootComponent (..) where
 import Color exposing (..)
 import Graphics.Collage exposing (..)
 import Graphics.Element exposing (Element)
-import History exposing (Timeline)
+import History exposing (..)
 import Data exposing (timeline)
 import Text exposing (..)
-
-
-type alias Model =
-  { timeline : Timeline
-  , height : Int
-  , width : Int
-  }
-
-
-init : Model
-init =
-  { timeline = timeline
-  , height = 600
-  , width = 800
-  }
-
-
-update : ( Int, Int ) -> Model -> Model
-update ( w, h ) model =
-  { model | width = w, height = h }
 
 
 type ZoomLevel
   = Month
   | Year
   | Decade
+
+
+type alias Model =
+  { timeline : Timeline
+  , centralYear : Int
+  , height : Int
+  , width : Int
+  , unit : Float
+  , zoom : ZoomLevel
+  }
+
+
+init : Model
+init =
+  { timeline = timeline
+  , centralYear = 1650
+  , height = 600
+  , width = 800
+  , unit = 10.0
+  , zoom = Year
+  }
+
+
+update : ( Int, Int ) -> Model -> Model
+update ( w, h ) model =
+  { model | width = w, height = h }
 
 
 sizeTimeUnit : ZoomLevel -> Int -> Int
@@ -52,6 +58,13 @@ axisSegment pt1 pt2 =
   segment pt1 pt2 |> traced (solid darkCharcoal)
 
 
+spanLabel : Float -> String -> Form
+spanLabel xpos label =
+  fromString label
+    |> text
+    |> move ( xpos, 30.0 )
+
+
 yearLabel : Float -> Int -> Form
 yearLabel xpos yr =
   toString yr
@@ -60,49 +73,74 @@ yearLabel xpos yr =
     |> move ( xpos, -15.0 )
 
 
+halfAxis : Model -> Float
+halfAxis model =
+  ((toFloat model.width) / 2.0) - (model.unit * 1.5)
+
+
+timeUnits : Model -> Int
+timeUnits model =
+  halfAxis model
+    / model.unit
+    |> floor
+    |> sizeTimeUnit model.zoom
+
+
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
   let
-    unit =
-      10.0
+    halfAxis' =
+      halfAxis model
 
-    halfAxis =
-      ((toFloat model.width) / 2.0) - 15.0
-
-    halfRange =
-      toFloat (model.timeline.finish - model.timeline.start)
-        / 2
-        |> floor
-
-    centralYear =
-      model.timeline.start + halfRange
-
-    timeUnits =
-      halfAxis
-        / unit
-        |> floor
-        |> sizeTimeUnit Year
+    timeUnits' =
+      timeUnits model
 
     minYear =
-      centralYear - timeUnits
+      model.centralYear - timeUnits'
 
     maxYear =
-      centralYear + timeUnits
+      model.centralYear + timeUnits'
 
     minYearPos =
-      toFloat timeUnits * -unit
+      toFloat timeUnits' * -model.unit
 
     maxYearPos =
-      toFloat timeUnits * unit
+      toFloat timeUnits' * model.unit
   in
-    [ axisSegment ( -halfAxis, 0.0 ) ( halfAxis, 0.0 )
-    , axisSegment ( minYearPos, -unit ) ( minYearPos, unit )
+    [ axisSegment ( -halfAxis', 0.0 ) ( halfAxis', 0.0 )
+    , axisSegment ( minYearPos, -model.unit ) ( minYearPos, model.unit )
     , yearLabel minYearPos minYear
-    , axisSegment ( 0.0, -unit ) ( 0.0, unit )
-    , yearLabel 0.0 centralYear
-    , axisSegment ( maxYearPos, -unit ) ( maxYearPos, unit )
+    , axisSegment ( 0.0, -model.unit ) ( 0.0, model.unit )
+    , yearLabel 0.0 model.centralYear
+    , axisSegment ( maxYearPos, -model.unit ) ( maxYearPos, model.unit )
     , yearLabel maxYearPos maxYear
     ]
+
+
+drawTimeSpan : Model -> TimeSpan -> List Form
+drawTimeSpan model timeSpan =
+  let
+    begin =
+      toFloat (timeSpan.from.year - model.centralYear)
+        * model.unit
+
+    end =
+      toFloat (timeSpan.to.year - model.centralYear)
+        * model.unit
+
+    labelAt =
+      toFloat (timeSpan.to.year - timeSpan.from.year) / 2.0 * model.unit + begin
+  in
+    [ segment ( begin, 2 * model.unit ) ( end, 2 * model.unit )
+        |> traced (solid darkBlue)
+    , spanLabel labelAt timeSpan.label
+    ]
+
+
+drawTimeSpans : Model -> List Form
+drawTimeSpans model =
+  List.map (drawTimeSpan model) model.timeline.timeSpans
+    |> List.concat
 
 
 background : Model -> List Form
@@ -116,7 +154,7 @@ background model =
 
 view : Model -> Element
 view model =
-  [ background, drawTimeAxis ]
+  [ background, drawTimeAxis, drawTimeSpans ]
     |> List.map (\f -> f model)
     |> List.concat
     |> collage model.width model.height

@@ -26,9 +26,7 @@ type alias TimeSpan =
 
 
 type alias Timeline =
-  { start : Int
-  , finish : Int
-  , timeSpans : List TimeSpan
+  { timeSpans : List TimeSpan
   , events : List LabeledEvent
   }
 
