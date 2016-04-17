@@ -14,6 +14,35 @@ type ZoomLevel
   | Decade
 
 
+type alias Colorscheme =
+  { bg : Color
+  , axisLabel : Color
+  , axis : Color
+  , span : Color
+  , spanLabel : Color
+  }
+
+
+dark : Colorscheme
+dark =
+  { bg = darkCharcoal
+  , axisLabel = white
+  , axis = lightGray
+  , span = lightBlue
+  , spanLabel = white
+  }
+
+
+light : Colorscheme
+light =
+  { bg = lightGray
+  , axisLabel = black
+  , axis = darkCharcoal
+  , span = darkBlue
+  , spanLabel = black
+  }
+
+
 type alias Model =
   { timeline : Timeline
   , centralYear : Int
@@ -22,6 +51,7 @@ type alias Model =
   , unit : Float
   , zoom : ZoomLevel
   , scrollFactor : Int
+  , colorscheme : Colorscheme
   }
 
 
@@ -34,6 +64,7 @@ init =
   , unit = 10.0
   , zoom = Year
   , scrollFactor = 10
+  , colorscheme = dark
   }
 
 
@@ -59,22 +90,24 @@ sizeTimeUnit zoomLv units =
       units * 10
 
 
-axisSegment : ( Float, Float ) -> ( Float, Float ) -> Form
-axisSegment pt1 pt2 =
-  segment pt1 pt2 |> traced (solid darkCharcoal)
+axisSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
+axisSegment colorscheme pt1 pt2 =
+  segment pt1 pt2 |> traced (solid colorscheme.axis)
 
 
-spanLabel : Float -> Float -> String -> Form
-spanLabel xpos ypos label =
+spanLabel : Colorscheme -> Float -> Float -> String -> Form
+spanLabel colorscheme xpos ypos label =
   fromString label
+    |> style { defaultStyle | color = colorscheme.spanLabel }
     |> text
     |> move ( xpos, ypos )
 
 
-yearLabel : Float -> Int -> Form
-yearLabel xpos yr =
+yearLabel : Colorscheme -> Float -> Int -> Form
+yearLabel colorscheme xpos yr =
   toString yr
     |> fromString
+    |> style { defaultStyle | color = colorscheme.axisLabel }
     |> text
     |> move ( xpos, -15.0 )
 
@@ -113,19 +146,19 @@ drawTimeAxis model =
     maxYearPos =
       toFloat timeUnits' * model.unit
   in
-    [ axisSegment ( -halfAxis', 0.0 ) ( halfAxis', 0.0 )
-    , axisSegment ( minYearPos, -model.unit ) ( minYearPos, model.unit )
-    , yearLabel minYearPos minYear
-    , axisSegment ( 0.0, -model.unit ) ( 0.0, model.unit )
-    , yearLabel 0.0 model.centralYear
-    , axisSegment ( maxYearPos, -model.unit ) ( maxYearPos, model.unit )
-    , yearLabel maxYearPos maxYear
+    [ axisSegment model.colorscheme ( -halfAxis', 0.0 ) ( halfAxis', 0.0 )
+    , axisSegment model.colorscheme ( minYearPos, -model.unit ) ( minYearPos, model.unit )
+    , yearLabel model.colorscheme minYearPos minYear
+    , axisSegment model.colorscheme ( 0.0, -model.unit ) ( 0.0, model.unit )
+    , yearLabel model.colorscheme 0.0 model.centralYear
+    , axisSegment model.colorscheme ( maxYearPos, -model.unit ) ( maxYearPos, model.unit )
+    , yearLabel model.colorscheme maxYearPos maxYear
     ]
 
 
-spanSegment : ( Float, Float ) -> ( Float, Float ) -> Form
-spanSegment pt1 pt2 =
-  segment pt1 pt2 |> traced (solid darkBlue)
+spanSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
+spanSegment colorscheme pt1 pt2 =
+  segment pt1 pt2 |> traced (solid colorscheme.span)
 
 
 drawTimeSpan : Model -> Int -> TimeSpan -> List Form
@@ -154,10 +187,10 @@ drawTimeSpan model index timeSpan =
     labelAtY =
       height + model.unit
   in
-    [ spanSegment ( begin, height ) ( end, height )
-    , spanSegment ( begin, heightPlus ) ( begin, heightMinus )
-    , spanSegment ( end, heightPlus ) ( end, heightMinus )
-    , spanLabel labelAtX labelAtY timeSpan.label
+    [ spanSegment model.colorscheme ( begin, height ) ( end, height )
+    , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
+    , spanSegment model.colorscheme ( end, heightPlus ) ( end, heightMinus )
+    , spanLabel model.colorscheme labelAtX labelAtY timeSpan.label
     ]
 
 
@@ -172,7 +205,7 @@ background model =
   [ rect
       (toFloat model.width)
       (toFloat model.height)
-      |> filled lightGray
+      |> filled model.colorscheme.bg
   ]
 
 
