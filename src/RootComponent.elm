@@ -172,8 +172,17 @@ drawTimeSpan model index timeSpan =
       toFloat (timeSpan.to.year - model.centralYear)
         * model.unit
 
+    vSign =
+      if index % 2 == 0 then
+        1
+      else
+        -1
+
+    layer =
+      vSign * index // 2
+
     height =
-      (toFloat (index + 1) * model.unit * 2.0) - (model.unit * 0.5)
+      (toFloat (layer + (1 * vSign)) * model.unit * 2.0) - (model.unit * 0.5)
 
     heightPlus =
       height + (model.unit * 0.5)
@@ -185,7 +194,7 @@ drawTimeSpan model index timeSpan =
       toFloat (timeSpan.to.year - timeSpan.from.year) / 2.0 * model.unit + begin
 
     labelAtY =
-      height + model.unit
+      height + (model.unit * vSign)
   in
     [ spanSegment model.colorscheme ( begin, height ) ( end, height )
     , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
