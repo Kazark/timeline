@@ -520,6 +520,126 @@ jeremiahBurroughs =
   { from = burroughsBorn, to = burroughsDied, label = "Jeremiah Burroughs" }
 
 
+anselmBorn =
+  duringYear 1033
+
+
+anselmDied =
+  on 1109 Apr 21
+
+
+anselmOfCanterbury =
+  { from = anselmBorn, to = anselmDied, label = "Anselm of Canterbury" }
+
+
+acquinasBorn =
+  duringYear 1225
+
+
+acquinasDied =
+  on 1274 Mar 7
+
+
+thomasAcquinas =
+  { from = acquinasBorn, to = acquinasDied, label = "Thomas Acquinas" }
+
+
+augustineBorn =
+  on 354 Nov 13
+
+
+augustineDied =
+  on 430 Aug 28
+
+
+augustineOfHippo =
+  { from = augustineBorn, to = augustineDied, label = "Augustine of Hippo" }
+
+
+boethiusBorn =
+  duringYear 480
+
+
+boethiusDied =
+  duringYear 524
+
+
+aniciusBoethius =
+  { from = boethiusBorn, to = boethiusDied, label = "Anicius Boethius" }
+
+
+athanasiusBorn =
+  duringYear 297
+
+
+athanasiusDied =
+  on 373 May 2
+
+
+athanasiusOfAlexandria =
+  { from = athanasiusBorn, to = athanasiusDied, label = "Athanasius of Alexandria" }
+
+
+chrysostomBorn =
+  duringYear 349
+
+
+chrysostomDied =
+  duringYear 407
+
+
+johnChrysostom =
+  { from = chrysostomBorn, to = chrysostomDied, label = "John Chrysostom" }
+
+
+arminiusBorn =
+  on 1560 Oct 10
+
+
+arminiusDied =
+  on 1609 Oct 19
+
+
+jacobusArminius =
+  { from = arminiusBorn, to = arminiusDied, label = "Jacobus Arminius" }
+
+
+nazianzusBorn =
+  duringYear 329
+
+
+nazianzusDied =
+  on 390 Jan 25
+
+
+gregoryNazianzus =
+  { from = nazianzusBorn, to = nazianzusDied, label = "Gregory of Nazianzus" }
+
+
+martyrBorn =
+  duringYear 100
+
+
+martyrDied =
+  duringYear 165
+
+
+justinMartyr =
+  { from = martyrBorn, to = martyrDied, label = "Justin Martyr" }
+
+
+brownHBorn =
+  duringYear 1722
+
+
+brownHDied =
+  on 1787 Jun 19
+
+
+johnBrownOfHaddington =
+  { from = brownHBorn, to = brownHDied, label = "John Brown of Haddington" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -566,6 +686,16 @@ timeline =
       , johnMurray
       , jGreshamMachen
       , jeremiahBurroughs
+      , anselmOfCanterbury
+      , thomasAcquinas
+      , augustineOfHippo
+      , aniciusBoethius
+      , athanasiusOfAlexandria
+      , johnChrysostom
+      , jacobusArminius
+      , gregoryNazianzus
+      , justinMartyr
+      , johnBrownOfHaddington
       ]
   , events = []
   }
