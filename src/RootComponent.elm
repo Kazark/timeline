@@ -161,8 +161,8 @@ spanSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.span)
 
 
-drawTimeSpan : Model -> Int -> TimeSpan -> List Form
-drawTimeSpan model index timeSpan =
+drawTimeSpan : Model -> ( Int, TimeSpan ) -> List Form
+drawTimeSpan model ( index, timeSpan ) =
   let
     begin =
       toFloat (timeSpan.from.year - model.centralYear)
@@ -206,10 +206,49 @@ drawTimeSpan model index timeSpan =
     ]
 
 
+findNext : ( Int, TimeSpan ) -> List TimeSpan -> ( List ( Int, TimeSpan ), List TimeSpan )
+findNext ( layerNum, timeSpan ) timeSpans =
+  case timeSpans of
+    next :: rest ->
+      if next.from.year > timeSpan.to.year then
+        let
+          ( layer, unlayered ) =
+            findNext ( layerNum, next ) rest
+        in
+          ( ( layerNum, timeSpan ) :: layer, unlayered )
+      else
+        let
+          ( layer, unlayered ) =
+            findNext ( layerNum, timeSpan ) rest
+        in
+          ( layer, next :: unlayered )
+
+    [] ->
+      ( [ ( layerNum, timeSpan ) ], [] )
+
+
+packLayers : Int -> List TimeSpan -> List ( Int, TimeSpan )
+packLayers index timeSpans =
+  case timeSpans of
+    ts :: tss ->
+      case findNext ( index, ts ) tss of
+        ( layered, next :: rest ) ->
+          packLayers (index + 1) (next :: rest)
+            |> List.append layered
+
+        ( layered, [] ) ->
+          layered
+
+    [] ->
+      []
+
+
 drawTimeSpans : Model -> List Form
 drawTimeSpans model =
-  List.indexedMap (drawTimeSpan model) model.timeline.timeSpans
-    |> List.concat
+  model.timeline.timeSpans
+    |> List.sortBy (\x -> x.from.year)
+    |> packLayers 0
+    |> List.concatMap (drawTimeSpan model)
 
 
 background : Model -> List Form
