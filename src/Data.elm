@@ -640,6 +640,150 @@ johnBrownOfHaddington =
   { from = brownHBorn, to = brownHDied, label = "John Brown of Haddington" }
 
 
+spurgeonBorn =
+  on 1834 Jun 19
+
+
+spurgeonDied =
+  on 1892 Jan 31
+
+
+charlesSpurgeon =
+  { from = spurgeonBorn, to = spurgeonDied, label = "Charles Spurgeon" }
+
+
+kuyperBorn =
+  on 1837 Oct 29
+
+
+kuyperDied =
+  on 1920 Nov 8
+
+
+abrahamKuyper =
+  { from = kuyperBorn, to = kuyperDied, label = "Abraham Kuyper" }
+
+
+hegelBorn =
+  on 1770 Aug 27
+
+
+hegelDied =
+  on 1831 Nov 14
+
+
+gwfHegel =
+  { from = hegelBorn, to = hegelDied, label = "GWF Hegel" }
+
+
+kantBorn =
+  on 1724 Apr 22
+
+
+kantDied =
+  on 1804 Feb 12
+
+
+immanuelKant =
+  { from = kantBorn, to = kantDied, label = "Immanuel Kant" }
+
+
+barthBorn =
+  on 1886 May 10
+
+
+barthDied =
+  on 1968 Dec 10
+
+
+karlBarth =
+  { from = barthBorn, to = barthDied, label = "Karl Barth" }
+
+
+kierkegaardBorn =
+  on 1813 May 5
+
+
+kierkegaardDied =
+  on 1855 Nov 11
+
+
+sorenKierkegaard =
+  { from = kierkegaardBorn, to = kierkegaardDied, label = "Soren Kierkegaard" }
+
+
+reidBorn =
+  on 1710 Apr 26
+
+
+reidDied =
+  on 1796 Oct 7
+
+
+thomasReid =
+  { from = reidBorn, to = reidDied, label = "Thomas Reid" }
+
+
+harnackBorn =
+  on 1851 May 7
+
+
+harnackDied =
+  on 1930 Jun 10
+
+
+adolfVonHarnack =
+  { from = harnackBorn, to = harnackDied, label = "Adolf von Harnack" }
+
+
+schleiermacherBorn =
+  on 1768 Nov 21
+
+
+schleiermacherDied =
+  on 1834 Feb 12
+
+
+friedrichSchleiermacher =
+  { from = schleiermacherBorn, to = schleiermacherDied, label = "Friedrich Schleiermacher" }
+
+
+klineBorn =
+  on 1922 Dec 15
+
+
+klineDied =
+  on 2007 Apr 14
+
+
+meredithKline =
+  { from = klineBorn, to = klineDied, label = "Meredith Kline" }
+
+
+schaefferBorn =
+  on 1912 Jan 30
+
+
+schaefferDied =
+  on 1984 May 15
+
+
+francisSchaeffer =
+  { from = schaefferBorn, to = schaefferDied, label = "Francis Schaeffer" }
+
+
+bucerBorn =
+  on 1491 Nov 11
+
+
+bucerDied =
+  on 1551 Feb 28
+
+
+martinBucer =
+  { from = bucerBorn, to = bucerDied, label = "Martin Bucer" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -691,11 +835,23 @@ timeline =
       , augustineOfHippo
       , aniciusBoethius
       , athanasiusOfAlexandria
+      , charlesSpurgeon
+      , abrahamKuyper
+      , gwfHegel
+      , immanuelKant
+      , karlBarth
+      , sorenKierkegaard
+      , thomasReid
       , johnChrysostom
       , jacobusArminius
       , gregoryNazianzus
       , justinMartyr
       , johnBrownOfHaddington
+      , adolfVonHarnack
+      , friedrichSchleiermacher
+      , meredithKline
+      , francisSchaeffer
+      , martinBucer
       ]
   , events = []
   }
