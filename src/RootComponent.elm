@@ -21,6 +21,7 @@ type alias Model =
   , width : Int
   , unit : Float
   , zoom : ZoomLevel
+  , scrollFactor : Int
   }
 
 
@@ -32,12 +33,17 @@ init =
   , width = 800
   , unit = 10.0
   , zoom = Year
+  , scrollFactor = 10
   }
 
 
-update : ( Int, Int ) -> Model -> Model
-update ( w, h ) model =
-  { model | width = w, height = h }
+update : ( ( Int, Int ), { x : Int, y : Int } ) -> Model -> Model
+update ( ( w, h ), { x, y } ) model =
+  { model
+    | width = w
+    , height = h
+    , centralYear = model.centralYear + x * model.scrollFactor
+  }
 
 
 sizeTimeUnit : ZoomLevel -> Int -> Int
