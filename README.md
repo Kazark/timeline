@@ -1,5 +1,6 @@
+# Timeline
 
-# timeline
+At the moment, a timeline of the Puritan era.
 
 ## Development
 
