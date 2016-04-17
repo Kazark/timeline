@@ -117,6 +117,11 @@ drawTimeAxis model =
     ]
 
 
+spanSegment : ( Float, Float ) -> ( Float, Float ) -> Form
+spanSegment pt1 pt2 =
+  segment pt1 pt2 |> traced (solid darkBlue)
+
+
 drawTimeSpan : Model -> TimeSpan -> List Form
 drawTimeSpan model timeSpan =
   let
@@ -131,8 +136,9 @@ drawTimeSpan model timeSpan =
     labelAt =
       toFloat (timeSpan.to.year - timeSpan.from.year) / 2.0 * model.unit + begin
   in
-    [ segment ( begin, 2 * model.unit ) ( end, 2 * model.unit )
-        |> traced (solid darkBlue)
+    [ spanSegment ( begin, 2 * model.unit ) ( end, 2 * model.unit )
+    , spanSegment ( begin, 2.5 * model.unit ) ( begin, 1.5 * model.unit )
+    , spanSegment ( end, 2.5 * model.unit ) ( end, 1.5 * model.unit )
     , spanLabel labelAt timeSpan.label
     ]
 
