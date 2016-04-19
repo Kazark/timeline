@@ -784,6 +784,66 @@ martinBucer =
   { from = bucerBorn, to = bucerDied, label = "Martin Bucer" }
 
 
+lewisBorn =
+  on 1898 Nov 29
+
+
+lewisDied =
+  on 1963 Nov 22
+
+
+csLewis =
+  { from = lewisBorn, to = lewisDied, label = "CS Lewis" }
+
+
+lombardBorn =
+  duringYear 1096
+
+
+lombardDied =
+  duringMonth 1160 Jul
+
+
+peterLombard =
+  { from = lombardBorn, to = lombardDied, label = "Peter Lombard" }
+
+
+abelardBorn =
+  duringYear 1079
+
+
+abelardDied =
+  on 1142 Apr 21
+
+
+peterAbelard =
+  { from = abelardBorn, to = abelardDied, label = "Peter Abelard" }
+
+
+haldaneBorn =
+  on 1764 Feb 28
+
+
+haldaneDied =
+  on 1842 Dec 12
+
+
+robertHaldane =
+  { from = haldaneBorn, to = haldaneDied, label = "Robert Haldane" }
+
+
+williamOfOckham =
+  { from = duringYear 1287, to = duringYear 1347, label = "William of Ockham" }
+
+
+bonaventure =
+  { from = duringYear 1221, to = on 1274 Jul 15, label = "Bonaventure" }
+
+
+dunsScotus =
+  { from = duringYear 1266, to = on 1308 Nov 8, label = "John Duns Scotus" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -812,6 +872,13 @@ timeline =
       , williamTyndale
       , johnWycliffe
       , janHus
+      , csLewis
+      , peterLombard
+      , peterAbelard
+      , robertHaldane
+      , williamOfOckham
+      , bonaventure
+      , dunsScotus
       , martinLuther
       , huldrychZwingli
       , johnCalvin
