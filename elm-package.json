@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "0.0.1",
   "summary": "Historical timeline of Puritanism",
-  "repository": "https://github.com/user/timeline.git",
-  "license": "BSD3",
+  "repository": "https://github.com/kazark/timeline.git",
+  "license": "The Unlicense",
   "source-directories": [
     "src"
   ],
