@@ -844,10 +844,41 @@ dunsScotus =
   { from = duringYear 1266, to = on 1308 Nov 8, label = "John Duns Scotus" }
 
 
+matthewHenry =
+  { from = on 1662 Oct 18, to = on 1714 Jun 22, label = "Matthew Henry" }
+
+
+johnGill =
+  { from = on 1697 Nov 23, to = on 1771 Oct 14, label = "John Gill" }
+
+
+richardBaxter =
+  { from = on 1615 Nov 12, to = on 1691 Dec 8, label = "Richard Baxter" }
+
+
+archibaldAlexander =
+  { from = on 1772 Apr 17, to = on 1851 Oct 22, label = "Archibald Alexander" }
+
+
+bbWarfield =
+  { from = on 1851 Nov 5, to = on 1921 Feb 16, label = "BB Warfield" }
+
+
+aaHodge =
+  { from = on 1823 Jul 18, to = on 1886 Nov 12, label = "AA Hodge" }
+
+
+dMartynLloydJones =
+  { from = on 1899 Dec 20, to = on 1981 Mar 1, label = "D. Martyn Lloyd-Jones" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
       [ johnOwen
+      , matthewHenry
+      , johnGill
+      , richardBaxter
       , thomasGoodwin
       , williamPerkins
       , williamAmes
@@ -872,6 +903,10 @@ timeline =
       , williamTyndale
       , johnWycliffe
       , janHus
+      , archibaldAlexander
+      , bbWarfield
+      , aaHodge
+      , dMartynLloydJones
       , csLewis
       , peterLombard
       , peterAbelard
