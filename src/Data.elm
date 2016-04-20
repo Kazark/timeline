@@ -872,6 +872,34 @@ dMartynLloydJones =
   { from = on 1899 Dec 20, to = on 1981 Mar 1, label = "D. Martyn Lloyd-Jones" }
 
 
+williamGurnell =
+  { from = duringYear 1616, to = on 1679 Oct 12, label = "William Gurnall" }
+
+
+robertMCheyne =
+  { from = on 1813 May 21, to = on 1843 Mar 25, label = "Robert Murray M'Cheyne" }
+
+
+karlRahner =
+  { from = on 1904 Mar 5, to = on 1984 Mar 30, label = "Karl Rahner" }
+
+
+jacopoSadoleto =
+  { from = on 1477 Jul 12, to = on 1547 Oct 18, label = "Jacopo Sadoleto" }
+
+
+desideriusErasmus =
+  { from = on 1466 Oct 28, to = on 1536 Jul 12, label = "Desiderius Erasmus" }
+
+
+danteAlighieri =
+  { from = duringYear 1265, to = duringYear 1321, label = "Dante Alighieri" }
+
+
+johnMilton =
+  { from = on 1608 Dec 9, to = on 1674 Nov 8, label = "John Milton" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -900,7 +928,14 @@ timeline =
       , stephenCharnock
       , johnKnox
       , jamesRenwick
+      , williamGurnell
+      , robertMCheyne
       , williamTyndale
+      , karlRahner
+      , jacopoSadoleto
+      , desideriusErasmus
+      , danteAlighieri
+      , johnMilton
       , johnWycliffe
       , janHus
       , archibaldAlexander
