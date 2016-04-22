@@ -900,6 +900,10 @@ johnMilton =
   { from = on 1608 Dec 9, to = on 1674 Nov 8, label = "John Milton" }
 
 
+walterMarshall =
+  { from = on 1628 Jun 15, to = duringMonth 1680 Aug, label = "Walter Marshall" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -915,6 +919,7 @@ timeline =
       , johnBunyan
       , thomasBoston
       , thomasWatson
+      , walterMarshall
       , christopherLove
       , francisTurretin
       , hermannWitsius
