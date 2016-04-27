@@ -904,10 +904,30 @@ walterMarshall =
   { from = on 1628 Jun 15, to = duringMonth 1680 Aug, label = "Walter Marshall" }
 
 
+georgeWhitefield =
+  { from = on 1714 Dec 27, to = on 1770 Sep 30, label = "George Whitefield" }
+
+
+henryErskine =
+  { from = duringYear 1624, to = duringYear 1696, label = "Henry Erskine" }
+
+
+ralphErskine =
+  { from = on 1685 Mar 18, to = on 1752 Nov 6, label = "Ralph Erskine" }
+
+
+ebenezerErskine =
+  { from = on 1680 Jun 22, to = on 1754 Jun 2, label = "Ebenezer Erskine" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
       [ johnOwen
+      , georgeWhitefield
+      , henryErskine
+      , ralphErskine
+      , ebenezerErskine
       , matthewHenry
       , johnGill
       , richardBaxter
