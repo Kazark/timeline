@@ -1,6 +1,7 @@
 module History (..) where
 
 import Date exposing (..)
+import Clock exposing (currentDate)
 
 
 type alias Event =
@@ -49,3 +50,7 @@ on y m d =
 fromDate : Date -> Event
 fromDate date =
   { year = year date, month = Just <| month date, day = Just <| day date }
+
+
+current =
+  currentDate () |> fromDate

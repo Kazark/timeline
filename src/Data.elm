@@ -2,11 +2,6 @@ module Data (timeline) where
 
 import Date exposing (..)
 import History exposing (..)
-import Clock exposing (currentDate)
-
-
-current =
-  currentDate () |> fromDate
 
 
 johnOwen =

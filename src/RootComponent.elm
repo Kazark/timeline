@@ -69,13 +69,43 @@ init =
   }
 
 
+halfAxis : Model -> Float
+halfAxis model =
+  ((toFloat model.width) / 2.0) - (model.unit * 1.5)
+
+
+timeUnits : Model -> Int
+timeUnits model =
+  halfAxis model
+    / model.unit
+    |> floor
+    |> sizeTimeUnit model.zoom
+
+
+minYear : Model -> Int
+minYear model =
+  model.centralYear - timeUnits model
+
+
+maxYear : Model -> Int
+maxYear model =
+  model.centralYear + timeUnits model
+
+
 update : ( ( Int, Int ), { x : Int, y : Int } ) -> Model -> Model
 update ( ( w, h ), { x, y } ) model =
-  { model
-    | width = w
-    , height = h
-    , centralYear = model.centralYear + x * model.scrollFactor
-  }
+  let
+    newModel =
+      { model
+        | width = w
+        , height = h
+        , centralYear = model.centralYear + x * model.scrollFactor
+      }
+  in
+    if maxYear newModel > current.year then
+      { newModel | centralYear = current.year - timeUnits model }
+    else
+      newModel
 
 
 sizeTimeUnit : ZoomLevel -> Int -> Int
@@ -113,19 +143,6 @@ yearLabel colorscheme xpos yr =
     |> move ( xpos, -15.0 )
 
 
-halfAxis : Model -> Float
-halfAxis model =
-  ((toFloat model.width) / 2.0) - (model.unit * 1.5)
-
-
-timeUnits : Model -> Int
-timeUnits model =
-  halfAxis model
-    / model.unit
-    |> floor
-    |> sizeTimeUnit model.zoom
-
-
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
   let
@@ -133,27 +150,21 @@ drawTimeAxis model =
       halfAxis model
 
     timeUnits' =
-      timeUnits model
-
-    minYear =
-      model.centralYear - timeUnits'
-
-    maxYear =
-      model.centralYear + timeUnits'
+      toFloat <| timeUnits model
 
     minYearPos =
-      toFloat timeUnits' * -model.unit
+      timeUnits' * -model.unit
 
     maxYearPos =
-      toFloat timeUnits' * model.unit
+      -minYearPos
   in
     [ axisSegment model.colorscheme ( -halfAxis', 0.0 ) ( halfAxis', 0.0 )
     , axisSegment model.colorscheme ( minYearPos, -model.unit ) ( minYearPos, model.unit )
-    , yearLabel model.colorscheme minYearPos minYear
+    , yearLabel model.colorscheme minYearPos <| minYear model
     , axisSegment model.colorscheme ( 0.0, -model.unit ) ( 0.0, model.unit )
     , yearLabel model.colorscheme 0.0 model.centralYear
     , axisSegment model.colorscheme ( maxYearPos, -model.unit ) ( maxYearPos, model.unit )
-    , yearLabel model.colorscheme maxYearPos maxYear
+    , yearLabel model.colorscheme maxYearPos <| maxYear model
     ]
 
 
