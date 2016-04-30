@@ -6,7 +6,10 @@ import Graphics.Element exposing (Element)
 import History exposing (..)
 import Data exposing (timeline)
 import Positioning exposing (packLayers)
+import NormalMode exposing (toScroll)
 import Text exposing (..)
+import Set exposing (Set)
+import Char exposing (KeyCode)
 
 
 type ZoomLevel
@@ -92,18 +95,20 @@ maxYear model =
   model.centralYear + timeUnits model
 
 
-update : ( ( Int, Int ), { x : Int, y : Int } ) -> Model -> Model
-update ( ( w, h ), { x, y } ) model =
+update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
+update ( ( w, h ), keysDown ) model =
   let
     newModel =
       { model
         | width = w
         , height = h
-        , centralYear = model.centralYear + x * model.scrollFactor
+        , centralYear = model.centralYear + (toScroll keysDown) * model.scrollFactor
       }
   in
     if maxYear newModel > current.year then
       { newModel | centralYear = current.year - timeUnits model }
+    else if minYear newModel < 1 then
+      { newModel | centralYear = 1 + timeUnits model }
     else
       newModel
 
