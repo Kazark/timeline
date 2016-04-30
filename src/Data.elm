@@ -920,6 +920,50 @@ ebenezerErskine =
   { from = on 1680 Jun 22, to = on 1754 Jun 2, label = "Ebenezer Erskine" }
 
 
+gisbertusVoetius =
+  { from = on 1589 Mar 3, to = on 1676 Nov 1, label = "Gisbertus Voetius" }
+
+
+hugoGrotius =
+  { from = on 1583 Apr 10, to = on 1645 Aug 28, label = "Hugo Grotius" }
+
+
+girolamoZanchi =
+  { from = on 1516 Feb 2, to = on 1590 Nov 19, label = "Girolamo Zanchi" }
+
+
+robertBellarmine =
+  { from = on 1542 Oct 4, to = on 1621 Sep 17, label = "Robert Bellarmine" }
+
+
+williamCarey =
+  { from = on 1761 Aug 17, to = on 1834 Jun 9, label = "William Carey" }
+
+
+hudsonTaylor =
+  { from = on 1832 May 21, to = on 1905 Jun 3, label = "James Hudson Taylor" }
+
+
+peterMartyrVermigli =
+  { from = on 1499 Sep 8, to = on 1562 Nov 12, label = "Peter Martyr Vermigli" }
+
+
+ericLiddell =
+  { from = on 1902 Jan 16, to = on 1945 Feb 21, label = "Eric Liddell" }
+
+
+johnEliot =
+  { from = duringYear 1604, to = on 1690 May 21, label = "John Eliot" }
+
+
+faustoSozzini =
+  { from = on 1539 Dec 5, to = on 1604 Mar 4, label = "Fausto Sozzini" }
+
+
+williamPlumer =
+  { from = on 1802 Jul 26, to = on 1880 Oct 22, label = "William Plumer" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -942,6 +986,17 @@ timeline =
       , walterMarshall
       , christopherLove
       , francisTurretin
+      , gisbertusVoetius
+      , hugoGrotius
+      , girolamoZanchi
+      , robertBellarmine
+      , williamCarey
+      , hudsonTaylor
+      , peterMartyrVermigli
+      , ericLiddell
+      , williamPlumer
+      , johnEliot
+      , faustoSozzini
       , hermannWitsius
       , davidBrainerd
       , georgeSwinnock
