@@ -969,10 +969,25 @@ joelBeeke =
   { from = duringYear 1952, to = current, label = "Joel Beeke" }
 
 
+ejYoung =
+  { from = on 1907 Nov 29, to = on 1968 Feb 14, label = "Edward J. Young" }
+
+
+bernardOfClairvaux =
+  { from = duringYear 1090, to = on 1153 Aug 20, label = "Bernard of Clairvaux" }
+
+
+thomasAKempis =
+  { from = duringYear 1380, to = on 1471 Jul 25, label = "Thomas a Kempis" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
       [ johnOwen
+      , ejYoung
+      , thomasAKempis
+      , bernardOfClairvaux
       , georgeWhitefield
       , henryErskine
       , ralphErskine
