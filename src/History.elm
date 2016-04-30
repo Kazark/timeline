@@ -44,3 +44,8 @@ duringMonth y m =
 on : Int -> Month -> Int -> Event
 on y m d =
   { year = y, month = Just m, day = Just d }
+
+
+fromDate : Date -> Event
+fromDate date =
+  { year = year date, month = Just <| month date, day = Just <| day date }

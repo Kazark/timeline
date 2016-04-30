@@ -2,18 +2,15 @@ module Data (timeline) where
 
 import Date exposing (..)
 import History exposing (..)
+import Clock exposing (currentDate)
 
 
-owenBorn =
-  duringYear 1616
-
-
-owenDied =
-  on 1683 Aug 24
+current =
+  currentDate () |> fromDate
 
 
 johnOwen =
-  { from = owenBorn, to = owenDied, label = "John Owen" }
+  { from = duringYear 1616, to = on 1683 Aug 24, label = "John Owen" }
 
 
 goodwinBorn =
@@ -964,6 +961,14 @@ williamPlumer =
   { from = on 1802 Jul 26, to = on 1880 Oct 22, label = "William Plumer" }
 
 
+tremperLongman =
+  { from = on 1952 Sep 8, to = current, label = "Tremper Longman III" }
+
+
+joelBeeke =
+  { from = duringYear 1952, to = current, label = "Joel Beeke" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -1011,6 +1016,8 @@ timeline =
       , williamGurnell
       , robertMCheyne
       , williamTyndale
+      , joelBeeke
+      , tremperLongman
       , karlRahner
       , jacopoSadoleto
       , desideriusErasmus
