@@ -524,16 +524,8 @@ anselmOfCanterbury =
   { from = anselmBorn, to = anselmDied, label = "Anselm of Canterbury" }
 
 
-acquinasBorn =
-  duringYear 1225
-
-
-acquinasDied =
-  on 1274 Mar 7
-
-
-thomasAcquinas =
-  { from = acquinasBorn, to = acquinasDied, label = "Thomas Acquinas" }
+thomasAquinas =
+  { from = duringYear 1225, to = on 1274 Mar 7, label = "Thomas Aquinas" }
 
 
 augustineBorn =
@@ -976,10 +968,43 @@ thomasAKempis =
   { from = duringYear 1380, to = on 1471 Jul 25, label = "Thomas a Kempis" }
 
 
+johnWitherspoon =
+  { from = on 1723 Feb 5, to = on 1794 Nov 15, label = "John Witherspoon" }
+
+
+juliusWellhausen =
+  { from = on 1844 May 17, to = on 1918 Jan 7, label = "Julius Wellhausen" }
+
+
+davidHume =
+  { from = on 1711 May 7, to = on 1776 Aug 25, label = "David Hume" }
+
+
+williamFarel =
+  { from = duringYear 1489, to = on 1565 Sep 13, label = "William Farel" }
+
+
+jerome =
+  { from = duringYear 347, to = on 420 Sep 30, label = "Jerome" }
+
+
+basilOfCaesarea =
+  { from = duringYear 320, to = duringMonth 379 Jan, label = "Basil of Caesarea" }
+
+
+gregoryOfNyssa =
+  { from = duringYear 335, to = duringYear 395, label = "Gregory of Nyssa" }
+
+
+bruceWaltke =
+  { from = on 1930 Aug 30, to = current, label = "Bruce Waltke" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
       [ johnOwen
+      , bruceWaltke
       , ejYoung
       , thomasAKempis
       , bernardOfClairvaux
@@ -996,6 +1021,13 @@ timeline =
       , johnFlavel
       , samuelRutherford
       , johnBunyan
+      , johnWitherspoon
+      , juliusWellhausen
+      , davidHume
+      , williamFarel
+      , jerome
+      , basilOfCaesarea
+      , gregoryOfNyssa
       , thomasBoston
       , thomasWatson
       , walterMarshall
@@ -1065,7 +1097,7 @@ timeline =
       , jGreshamMachen
       , jeremiahBurroughs
       , anselmOfCanterbury
-      , thomasAcquinas
+      , thomasAquinas
       , augustineOfHippo
       , aniciusBoethius
       , athanasiusOfAlexandria
