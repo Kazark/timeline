@@ -12,9 +12,7 @@ type alias Event =
 
 
 type alias LabeledEvent =
-  { year : Int
-  , month : Maybe Month
-  , day : Maybe Int
+  { when : Event
   , label : String
   }
 
