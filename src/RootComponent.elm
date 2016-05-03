@@ -225,10 +225,26 @@ drawTimeSpan model ( index, timeSpan ) =
 
 drawTimeSpans : Model -> List Form
 drawTimeSpans model =
-  model.timeline.timeSpans
-    |> List.sortBy (\x -> x.from.year)
-    |> packLayers 0
-    |> List.concatMap (drawTimeSpan model)
+  let
+    timeSpanLayers =
+      model.timeline.timeSpans
+        |> List.sortBy (\x -> x.from.year)
+        |> packLayers 0
+
+    firstEventLayer =
+      List.length timeSpanLayers
+
+    eventLayers =
+      model.timeline.events
+        |> TODO
+  in
+    List.concatMap (drawTimeSpan model) timeSpanLayers
+      |> List.append TODO
+
+
+drawTimeline : Model -> List Form
+drawTimeline =
+  drawTimeSpans
 
 
 background : Model -> List Form
@@ -242,7 +258,7 @@ background model =
 
 view : Model -> Element
 view model =
-  [ background, drawTimeAxis, drawTimeSpans ]
+  [ background, drawTimeAxis, drawTimeline ]
     |> List.map (\f -> f model)
     |> List.concat
     |> collage model.width model.height
