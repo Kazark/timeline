@@ -1000,6 +1000,42 @@ bruceWaltke =
   { from = on 1930 Aug 30, to = current, label = "Bruce Waltke" }
 
 
+ignatiusOfAntioch =
+  { from = duringYear 35, to = duringYear 108, label = "Ignatius of Antioch" }
+
+
+polycarp =
+  { from = duringYear 69, to = duringYear 155, label = "Polycarp" }
+
+
+eusebius =
+  { from = duringYear 260, to = duringYear 339, label = "Eusebius" }
+
+
+johnTheApostle =
+  { from = duringYear 6, to = duringYear 100, label = "John the Apostle" }
+
+
+heinrichBullinger =
+  { from = on 1504 Jul 18, to = on 1575 Sep 17, label = "Heinrich Bullinger" }
+
+
+tertullian =
+  { from = duringYear 155, to = duringYear 240, label = "Tertullian" }
+
+
+arius =
+  { from = duringYear 250, to = duringYear 336, label = "Arius" }
+
+
+pelagius =
+  { from = duringYear 360, to = duringYear 418, label = "Pelagius" }
+
+
+mani =
+  { from = duringYear 216, to = duringYear 274, label = "Mani" }
+
+
 timeline : Timeline
 timeline =
   { timeSpans =
@@ -1026,6 +1062,15 @@ timeline =
       , davidHume
       , williamFarel
       , jerome
+      , ignatiusOfAntioch
+      , polycarp
+      , tertullian
+      , arius
+      , pelagius
+      , mani
+      , eusebius
+      , johnTheApostle
+      , heinrichBullinger
       , basilOfCaesarea
       , gregoryOfNyssa
       , thomasBoston
