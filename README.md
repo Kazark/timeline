@@ -1,12 +1,30 @@
 # Timeline
 
-At the moment, a timeline of the Puritan era.
+At the moment, a timeline of (Western) church history.
+
+# Navigation
+
+Move left with <kbd>H</kbd> or <kbd>LEFT ARROW</kbd>, and right with
+<kbd>L</kbd> or <kbd>RIGHT ARROW</kbd>. To move faster, hold down the shift key
+as well.
 
 ## Development
 
-Start local server in root directory:
+Start local server in root directory with Python 2:
 
-    python -m SimpleHTTPServer 5000  (or `npm run server`)
+    npm run serve
+
+or
+
+    python -m SimpleHTTPServer 5000
+
+Start local server in root directory with Python 3:
+
+    npm run serv3
+
+or
+
+    python3 -m http.server 5000
 
 Build project:
 
