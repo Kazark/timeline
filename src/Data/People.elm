@@ -1036,9 +1036,14 @@ mani =
   { from = duringYear 216, to = duringYear 274, label = "Mani" }
 
 
+obadiahSedgwick =
+  { from = duringYear 1600, to = duringYear 1658, label = "Obadiah Sedgwick" }
+
+
 people : List TimeSpan
 people =
   [ johnOwen
+  , obadiahSedgwick
   , bruceWaltke
   , ejYoung
   , thomasAKempis
