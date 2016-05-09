@@ -1048,12 +1048,27 @@ johnCameron =
   { from = duringYear 1579, to = duringYear 1625, label = "John Cameron" }
 
 
+mosesAmyraut =
+  { from = duringMonth 1596 Sep, to = on 1664 Jan 8, label = "Moses Amyraut" }
+
+
+davidPareus =
+  { from = on 1548 Dec 30, to = on 1622 Jun 15, label = "David Pareus" }
+
+
+johannesCocceius =
+  { from = on 1603 Aug 9, to = on 1669 Nov 4, label = "Johannes Cocceius" }
+
+
 people : List TimeSpan
 people =
   [ johnOwen
   , obadiahSedgwick
   , johnCameron
   , richardCameron
+  , mosesAmyraut
+  , davidPareus
+  , johannesCocceius
   , bruceWaltke
   , ejYoung
   , thomasAKempis
