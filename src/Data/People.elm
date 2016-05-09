@@ -1040,10 +1040,20 @@ obadiahSedgwick =
   { from = duringYear 1600, to = duringYear 1658, label = "Obadiah Sedgwick" }
 
 
+richardCameron =
+  { from = duringYear 1648, to = on 1680 Jul 22, label = "Richard Cameron" }
+
+
+johnCameron =
+  { from = duringYear 1579, to = duringYear 1625, label = "John Cameron" }
+
+
 people : List TimeSpan
 people =
   [ johnOwen
   , obadiahSedgwick
+  , johnCameron
+  , richardCameron
   , bruceWaltke
   , ejYoung
   , thomasAKempis
