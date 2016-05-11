@@ -524,13 +524,108 @@ johannesCocceius =
   { from = on 1603 Aug 9, to = on 1669 Nov 4, label = "Johannes Cocceius" }
 
 
+thomasChalmers =
+  { from = duringYear 1780, to = duringYear 1847, label = "Thomas Chalmers" }
+
+
+johnHowe =
+  { from = duringYear 1630, to = duringYear 1705, label = "John Howe" }
+
+
+jiPacker =
+  { from = duringYear 1926, to = current, label = "J.I. Packer" }
+
+
+jgVos =
+  { from = duringYear 1903, to = duringYear 1983, label = "J.G. Vos" }
+
+
+johnGerstner =
+  { from = on 1914 Nov 22, to = on 1996 Mar 24, label = "John Gerstner" }
+
+
+rcSproul =
+  { from = on 1939 Feb 13, to = current, label = "R.C. Sproul" }
+
+
+johannesMaccovius =
+  { from = duringYear 1588, to = duringYear 1644, label = "Johannes Maccovius" }
+
+
+jamesUssher =
+  { from = duringYear 1581, to = duringYear 1656, label = "James Ussher" }
+
+
+matthewBarker =
+  { from = duringYear 1619, to = duringYear 1698, label = "Matthew Barker" }
+
+
+richardVines =
+  { from = duringYear 1600, to = duringYear 1655, label = "Richard Vines" }
+
+
+johnCaryl =
+  { from = duringYear 1602, to = duringYear 1673, label = "Joseph Caryl" }
+
+
+paulBaynes =
+  { from = duringYear 1573, to = duringYear 1617, label = "Paul Baynes" }
+
+
+francisRoberts =
+  { from = duringYear 1609, to = duringYear 1675, label = "Francis Roberts" }
+
+
+georgeGillespie =
+  { from = duringYear 1613, to = duringYear 1648, label = "George Gillespie" }
+
+
+patrickGillespie =
+  { from = duringYear 1617, to = duringYear 1675, label = "Patrick Gillespie" }
+
+
+thomasAdams =
+  { from = duringYear 1583, to = duringYear 1652, label = "Thomas Adams" }
+
+
+isaacAmbrose =
+  { from = duringYear 1604, to = duringYear 1664, label = "Isaac Ambrose" }
+
+
+edwardLeigh =
+  { from = duringYear 1603, to = duringYear 1671, label = "Edward Leigh" }
+
+
+jamesDurham =
+  { from = duringYear 1622, to = duringYear 1658, label = "James Durham" }
+
+
 people : List TimeSpan
 people =
   [ johnOwen
+  , thomasChalmers
+  , johnHowe
+  , jiPacker
+  , jgVos
+  , johnGerstner
+  , rcSproul
+  , jamesUssher
+  , matthewBarker
+  , richardVines
+  , johnCaryl
+  , paulBaynes
+  , francisRoberts
+  , georgeGillespie
+  , patrickGillespie
+  , thomasAdams
+  , isaacAmbrose
+  , edwardLeigh
+  , jamesDurham
   , obadiahSedgwick
   , johnCameron
   , richardCameron
   , mosesAmyraut
+  , johannesMaccovius
   , davidPareus
   , johannesCocceius
   , bruceWaltke
