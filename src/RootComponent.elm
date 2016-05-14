@@ -39,6 +39,7 @@ type alias Colorscheme =
   { bg : Color
   , axisLabel : Color
   , axis : Color
+  , vline : Color
   , span : Color
   , spanLabel : Color
   , eventLabel : Color
@@ -48,9 +49,10 @@ type alias Colorscheme =
 
 dark : Colorscheme
 dark =
-  { bg = darkCharcoal
+  { bg = black
   , axisLabel = white
   , axis = lightGray
+  , vline = darkCharcoal
   , span = lightBlue
   , spanLabel = white
   , eventLabel = white
@@ -63,6 +65,7 @@ light =
   { bg = lightGray
   , axisLabel = black
   , axis = darkCharcoal
+  , vline = darkGray
   , span = darkBlue
   , spanLabel = black
   , eventLabel = black
@@ -137,24 +140,33 @@ halfScreenInTimeUnits model =
     halfScreenInPixels model
     |> pixelsToTimeUnits model
 
-halfAxisInYears : Model -> Int
-halfAxisInYears model =
-    let -- The -2 is because we don't want to draw too close to the edge when
-        -- floor doesn't change the number much
-        toEdge = halfScreenInTimeUnits model - 2
-        toEdge' = convertUp model.zoom toEdge |> floor
-        radius' = toEdge'
-        radius = convertDown (zoomOut model.zoom) (toFloat radius')
-    in round radius
+halfAxisInUppedTimeUnits : Model -> Int
+halfAxisInUppedTimeUnits model =
+    -- The -2 is because we don't want to draw too close to the edge when
+    -- floor doesn't change the number much
+    halfScreenInTimeUnits model - 2
+    |> convertUp model.zoom
+    |> floor
+
+downTimeUnits : Model -> Int -> Float
+downTimeUnits model =
+    toFloat
+    >> convertDown (zoomOut model.zoom)
+
+halfAxisInTimeUnits : Model -> Int
+halfAxisInTimeUnits model =
+    halfAxisInUppedTimeUnits model
+    |> downTimeUnits model
+    |> round
 
 minYear : Model -> Int
 minYear model =
-  model.centralYear - halfAxisInYears model
+  model.centralYear - halfAxisInTimeUnits model
 
 
 maxYear : Model -> Int
 maxYear model =
-  model.centralYear + halfAxisInYears model
+  model.centralYear + halfAxisInTimeUnits model
 
 
 update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
@@ -168,9 +180,9 @@ update ( ( w, h ), keysDown ) model =
       }
   in
     if maxYear newModel > current.year then
-      { newModel | centralYear = current.year - halfAxisInYears model }
+      { newModel | centralYear = current.year - halfAxisInTimeUnits model }
     else if minYear newModel < 1 then
-      { newModel | centralYear = 1 + halfAxisInYears model }
+      { newModel | centralYear = 1 + halfAxisInTimeUnits model }
     else
       newModel
 
@@ -179,6 +191,10 @@ update ( ( w, h ), keysDown ) model =
 axisSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
 axisSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.axis)
+
+vLineSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form 
+vLineSegment colorscheme pt1 pt2 =
+  segment pt1 pt2 |> traced (solid colorscheme.vline)
 
 
 drawLabel : Color -> Float -> Float -> String -> Form
@@ -204,14 +220,39 @@ yearLabel colorscheme xpos yr =
   toString yr
     |> drawLabel colorscheme.axisLabel xpos -15.0
 
+range : Int -> Int -> List Int
+range from to =
+    if from >= to
+    then []
+    else
+        from :: range (from + 1) to
+
+vLineOffsets : Model -> List Float
+vLineOffsets model =
+    halfAxisInUppedTimeUnits model
+    * 2
+    + 1
+    |> range 0
+    |> List.map (downTimeUnits model >> (*) model.unit)
+
+drawVLine : Model -> Float -> Form
+drawVLine model xpos =
+    let vradius = (toFloat model.height) / 2.0
+    in vLineSegment model.colorscheme (xpos, vradius) (xpos, -vradius)
+
+drawVLines : Model -> Float -> Float -> List Form
+drawVLines model begin end =
+    vLineOffsets model
+    |> List.map ((+) begin >> drawVLine model)
 
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
   let xmax = halfScreenInPixels model
-      minYearPos = (toFloat <| halfAxisInYears model) * -model.unit
+      minYearPos = (toFloat <| halfAxisInTimeUnits model) * -model.unit
       maxYearPos = -minYearPos
   in
-    [ axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
+    drawVLines model minYearPos maxYearPos
+    ++ [ axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
     , axisSegment model.colorscheme ( minYearPos, -model.unit ) ( minYearPos, model.unit )
     , yearLabel model.colorscheme minYearPos <| minYear model
     , axisSegment model.colorscheme ( 0.0, -model.unit ) ( 0.0, model.unit )
@@ -321,8 +362,8 @@ drawTimeline model =
       model.timeline.events
         |> \x -> x
   in
-    List.concatMap (drawTimeSpan model) timeSpanLayers
-      |> List.append (List.concatMap (drawLabeledEvent model) eventLayers)
+    (List.concatMap (drawTimeSpan model) timeSpanLayers)
+    ++ (List.concatMap (drawLabeledEvent model) eventLayers)
 
 
 background : Model -> List Form
