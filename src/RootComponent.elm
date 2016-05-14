@@ -16,6 +16,15 @@ type ZoomLevel
   = Month
   | Year
   | Decade
+  | Century
+
+zoomOut : ZoomLevel -> ZoomLevel
+zoomOut zlvl =
+    case zlvl of
+        Month -> Year
+        Year -> Decade
+        Decade -> Century
+        Century -> Century
 
 
 type alias Colorscheme =
@@ -77,14 +86,17 @@ init =
   , colorscheme = dark
   }
 
+halfScreen : Model -> Float
+halfScreen model =
+    (toFloat model.width) / 2.0
 
 halfAxis : Model -> Float
 halfAxis model =
-  ((toFloat model.width) / 2.0) - (model.unit * 1.5)
+    halfScreen model - (1.5 * model.unit)
 
 
-timeUnits : Model -> Int
-timeUnits model =
+timeUnitsInYears : Model -> Int
+timeUnitsInYears model =
   halfAxis model
     / model.unit
     |> floor
@@ -93,12 +105,12 @@ timeUnits model =
 
 minYear : Model -> Int
 minYear model =
-  model.centralYear - timeUnits model
+  model.centralYear - timeUnitsInYears model
 
 
 maxYear : Model -> Int
 maxYear model =
-  model.centralYear + timeUnits model
+  model.centralYear + timeUnitsInYears model
 
 
 update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
@@ -112,24 +124,20 @@ update ( ( w, h ), keysDown ) model =
       }
   in
     if maxYear newModel > current.year then
-      { newModel | centralYear = current.year - timeUnits model }
+      { newModel | centralYear = current.year - timeUnitsInYears model }
     else if minYear newModel < 1 then
-      { newModel | centralYear = 1 + timeUnits model }
+      { newModel | centralYear = 1 + timeUnitsInYears model }
     else
       newModel
 
 
 sizeTimeUnit : ZoomLevel -> Int -> Int
 sizeTimeUnit zoomLv units =
-  case zoomLv of
-    Month ->
-      floor (toFloat units / 12.0)
-
-    Year ->
-      units
-
-    Decade ->
-      units * 10
+    case zoomLv of
+      Month -> floor (toFloat units / 12.0)
+      Year -> units
+      Decade -> units * 10
+      Century -> units * 100
 
 
 axisSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
@@ -164,19 +172,22 @@ yearLabel colorscheme xpos yr =
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
   let
+    halfScreen' =
+      halfScreen model
+
     halfAxis' =
       halfAxis model
 
-    timeUnits' =
-      toFloat <| timeUnits model
+    timeUnitsInYears' =
+      toFloat <| timeUnitsInYears model
 
     minYearPos =
-      timeUnits' * -model.unit
+      timeUnitsInYears' * -model.unit
 
     maxYearPos =
       -minYearPos
   in
-    [ axisSegment model.colorscheme ( -halfAxis', 0.0 ) ( halfAxis', 0.0 )
+    [ axisSegment model.colorscheme ( -halfScreen', 0.0 ) ( halfScreen', 0.0 )
     , axisSegment model.colorscheme ( minYearPos, -model.unit ) ( minYearPos, model.unit )
     , yearLabel model.colorscheme minYearPos <| minYear model
     , axisSegment model.colorscheme ( 0.0, -model.unit ) ( 0.0, model.unit )
