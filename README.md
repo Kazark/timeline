@@ -10,6 +10,11 @@ as well.
 
 ## Development
 
+Restore Node dependencies (Elm will restore its own when you kick off the
+build):
+
+    npm install
+
 Start local server in root directory with Python 2:
 
     npm run serve
