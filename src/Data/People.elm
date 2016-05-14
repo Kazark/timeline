@@ -600,6 +600,18 @@ jamesDurham =
   { from = duringYear 1622, to = duringYear 1658, label = "James Durham" }
 
 
+franciscoSuarez =
+  { from = on 1548 Jan 5, to = on 1617 Sep 25, label = "Francisco Suarez" }
+
+
+leonardusLessius =
+  { from = on 1554 Oct 1, to = on 1623 Jan 15, label = "Leonardus Lessius" }
+
+
+peterRamus =
+  { from = duringYear 1515, to = on 1572 Aug 26, label = "Peter Ramus" }
+
+
 people : List TimeSpan
 people =
   [ johnOwen
@@ -624,6 +636,7 @@ people =
   , obadiahSedgwick
   , johnCameron
   , richardCameron
+  , peterRamus
   , mosesAmyraut
   , johannesMaccovius
   , davidPareus
@@ -631,6 +644,8 @@ people =
   , bruceWaltke
   , ejYoung
   , thomasAKempis
+  , franciscoSuarez
+  , leonardusLessius
   , bernardOfClairvaux
   , georgeWhitefield
   , henryErskine
