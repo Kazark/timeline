@@ -86,31 +86,38 @@ init =
   , colorscheme = dark
   }
 
-halfScreen : Model -> Float
-halfScreen model =
-    (toFloat model.width) / 2.0
-
-halfAxis : Model -> Float
-halfAxis model =
-    halfScreen model - (1.5 * model.unit)
-
-
-timeUnitsInYears : Model -> Int
-timeUnitsInYears model =
-  halfAxis model
-    / model.unit
+pixelsToYears : Model -> Float -> Int
+pixelsToYears model pixels =
+    pixels / model.unit
     |> floor
     |> sizeTimeUnit model.zoom
 
+halfScreenInPixels : Model -> Float
+halfScreenInPixels model =
+    (toFloat model.width) / 2.0
+
+halfScreenInYears : Model -> Int
+halfScreenInYears model =
+    halfScreenInPixels model
+    |> pixelsToYears model
+
+halfAxisInPixels : Model -> Float
+halfAxisInPixels model =
+    halfScreenInPixels model - (1.5 * model.unit)
+
+halfAxisInYears : Model -> Int
+halfAxisInYears model =
+    halfAxisInPixels model
+    |> pixelsToYears model
 
 minYear : Model -> Int
 minYear model =
-  model.centralYear - timeUnitsInYears model
+  model.centralYear - halfAxisInYears model
 
 
 maxYear : Model -> Int
 maxYear model =
-  model.centralYear + timeUnitsInYears model
+  model.centralYear + halfAxisInYears model
 
 
 update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
@@ -124,9 +131,9 @@ update ( ( w, h ), keysDown ) model =
       }
   in
     if maxYear newModel > current.year then
-      { newModel | centralYear = current.year - timeUnitsInYears model }
+      { newModel | centralYear = current.year - halfAxisInYears model }
     else if minYear newModel < 1 then
-      { newModel | centralYear = 1 + timeUnitsInYears model }
+      { newModel | centralYear = 1 + halfAxisInYears model }
     else
       newModel
 
@@ -171,23 +178,11 @@ yearLabel colorscheme xpos yr =
 
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
-  let
-    halfScreen' =
-      halfScreen model
-
-    halfAxis' =
-      halfAxis model
-
-    timeUnitsInYears' =
-      toFloat <| timeUnitsInYears model
-
-    minYearPos =
-      timeUnitsInYears' * -model.unit
-
-    maxYearPos =
-      -minYearPos
+  let xmax = halfScreenInPixels model
+      minYearPos = (toFloat <| halfAxisInYears model) * -model.unit
+      maxYearPos = -minYearPos
   in
-    [ axisSegment model.colorscheme ( -halfScreen', 0.0 ) ( halfScreen', 0.0 )
+    [ axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
     , axisSegment model.colorscheme ( minYearPos, -model.unit ) ( minYearPos, model.unit )
     , yearLabel model.colorscheme minYearPos <| minYear model
     , axisSegment model.colorscheme ( 0.0, -model.unit ) ( 0.0, model.unit )
@@ -277,13 +272,17 @@ drawLabeledEvent model levent =
   in
     [ label, labelUnderline, dateMarker ]
 
+isOnScreen : Model -> TimeSpan -> Bool
+isOnScreen model x =
+    x.from.year < maxYear model && x.to.year > minYear model
+
 
 drawTimeline : Model -> List Form
 drawTimeline model =
   let
     timeSpanLayers =
       model.timeline.timeSpans
-        |> List.filter (\x -> x.from.year < maxYear model && x.to.year > minYear model)
+        |> List.filter (isOnScreen model)
         |> packLayers 0
 
     firstEventLayer =
