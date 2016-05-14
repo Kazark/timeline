@@ -283,7 +283,7 @@ drawTimeline model =
   let
     timeSpanLayers =
       model.timeline.timeSpans
-        |> List.sortBy (\x -> x.from.year)
+        |> List.filter (\x -> x.from.year < maxYear model && x.to.year > minYear model)
         |> packLayers 0
 
     firstEventLayer =

@@ -9,5 +9,6 @@ import Data.Councils exposing (councils)
 timeline : Timeline
 timeline =
   { timeSpans = List.append people councils
+                |> List.sortBy (\x -> x.from.year)
   , events = events
   }
