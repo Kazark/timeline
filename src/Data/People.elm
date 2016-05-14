@@ -612,6 +612,10 @@ peterRamus =
   { from = duringYear 1515, to = on 1572 Aug 26, label = "Peter Ramus" }
 
 
+constantineI =
+  { from = on 272 Feb 27, to = on 337 May 22, label = "Constantine I" }
+
+
 people : List TimeSpan
 people =
   [ johnOwen
@@ -664,6 +668,7 @@ people =
   , juliusWellhausen
   , davidHume
   , williamFarel
+  , constantineI
   , jerome
   , ignatiusOfAntioch
   , polycarp

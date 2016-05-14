@@ -188,7 +188,7 @@ drawTimeAxis model =
 
 eventSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
 eventSegment colorscheme pt1 pt2 =
-  segment pt1 pt2 |> traced (solid colorscheme.event)
+  segment pt1 pt2 |> traced (dotted colorscheme.event)
 
 
 eventUnderline : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
@@ -262,7 +262,7 @@ drawLabeledEvent model levent =
       eventUnderline model.colorscheme ( xpos - 50.0, 240.0 ) ( xpos + 50.0, 240.0 )
 
     dateMarker =
-      eventSegment model.colorscheme ( xpos, 240.0 ) ( xpos, 220.0 )
+      eventSegment model.colorscheme ( xpos, 240.0 ) ( xpos, 0.0 )
   in
     [ label, labelUnderline, dateMarker ]
 
