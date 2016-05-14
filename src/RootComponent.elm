@@ -26,6 +26,14 @@ zoomOut zlvl =
         Decade -> Century
         Century -> Century
 
+zoomIn : ZoomLevel -> ZoomLevel
+zoomIn zlvl =
+    case zlvl of
+        Month -> Month
+        Year -> Month
+        Decade -> Year
+        Century -> Decade
+
 
 type alias Colorscheme =
   { bg : Color
@@ -86,29 +94,58 @@ init =
   , colorscheme = dark
   }
 
-pixelsToYears : Model -> Float -> Int
-pixelsToYears model pixels =
-    pixels / model.unit
+convert : ZoomLevel -> ZoomLevel -> Float -> Float
+convert zoomLv1 zoomLv2 x =
+    case (zoomLv1, zoomLv2) of
+        (Month, Year) -> x / 12
+        (Month, Decade) -> convert Month Year x |> convert Year Decade
+        (Month, Century) -> convert Month Decade x |> convert Decade Century
+        (Year, Month) -> x * 12
+        (Year, Decade) -> x / 10
+        (Year, Century) -> convert Year Decade x |> convert Decade Century
+        (Decade, Month) -> convert Decade Year x |> convert Year Month
+        (Decade, Year) -> x * 10
+        (Decade, Century) -> x / 10
+        (Century, Month) -> convert Century Decade x |> convert Decade Month
+        (Century, Year) -> convert Century Decade x |> convert Decade Year
+        (Century, Decade) -> x * 10
+        _ -> x
+
+convertUp : ZoomLevel -> Float -> Float
+convertUp zoomLv =
+    convert zoomLv (zoomOut zoomLv)
+
+convertDown : ZoomLevel -> Float -> Float
+convertDown zoomLv =
+    convert zoomLv (zoomIn zoomLv)
+
+timeUnitsToYears : ZoomLevel -> Int -> Int
+timeUnitsToYears zoomLv units =
+    convert zoomLv Year (toFloat units)
     |> floor
-    |> sizeTimeUnit model.zoom
+
+pixelsToTimeUnits : Model -> Float -> Float
+pixelsToTimeUnits model pixels =
+    pixels / model.unit
 
 halfScreenInPixels : Model -> Float
 halfScreenInPixels model =
     (toFloat model.width) / 2.0
 
-halfScreenInYears : Model -> Int
-halfScreenInYears model =
+halfScreenInTimeUnits : Model -> Float
+halfScreenInTimeUnits model =
     halfScreenInPixels model
-    |> pixelsToYears model
-
-halfAxisInPixels : Model -> Float
-halfAxisInPixels model =
-    halfScreenInPixels model - (1.5 * model.unit)
+    |> pixelsToTimeUnits model
 
 halfAxisInYears : Model -> Int
 halfAxisInYears model =
-    halfAxisInPixels model
-    |> pixelsToYears model
+    let -- The -2 is because we don't want to draw too close to the edge when
+        -- floor doesn't change the number much
+        toEdge = halfScreenInTimeUnits model - 2
+        toEdge' = convertUp model.zoom toEdge |> floor
+        radius' = toEdge'
+        radius = convertDown (zoomOut model.zoom) (toFloat radius')
+    in round radius
 
 minYear : Model -> Int
 minYear model =
@@ -137,14 +174,6 @@ update ( ( w, h ), keysDown ) model =
     else
       newModel
 
-
-sizeTimeUnit : ZoomLevel -> Int -> Int
-sizeTimeUnit zoomLv units =
-    case zoomLv of
-      Month -> floor (toFloat units / 12.0)
-      Year -> units
-      Decade -> units * 10
-      Century -> units * 100
 
 
 axisSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
