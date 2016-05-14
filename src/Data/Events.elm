@@ -14,4 +14,6 @@ actOfToleration =
 
 events : List LabeledEvent
 events =
-  []
+  [ actOfUniformity
+  , actOfToleration
+  ]

@@ -24,6 +24,7 @@ type alias Colorscheme =
   , axis : Color
   , span : Color
   , spanLabel : Color
+  , eventLabel : Color
   }
 
 
@@ -34,6 +35,7 @@ dark =
   , axis = lightGray
   , span = lightBlue
   , spanLabel = white
+  , eventLabel = green
   }
 
 
@@ -44,6 +46,7 @@ light =
   , axis = darkCharcoal
   , span = darkBlue
   , spanLabel = black
+  , eventLabel = green
   }
 
 
@@ -131,21 +134,28 @@ axisSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.axis)
 
 
-spanLabel : Colorscheme -> Float -> Float -> String -> Form
-spanLabel colorscheme xpos ypos label =
+drawLabel : Color -> Float -> Float -> String -> Form
+drawLabel color xpos ypos label =
   fromString label
-    |> style { defaultStyle | color = colorscheme.spanLabel }
+    |> style { defaultStyle | color = color }
     |> text
     |> move ( xpos, ypos )
+
+
+eventLabel : Colorscheme -> Float -> Float -> String -> Form
+eventLabel colorscheme =
+  drawLabel colorscheme.eventLabel
+
+
+spanLabel : Colorscheme -> Float -> Float -> String -> Form
+spanLabel colorscheme =
+  drawLabel colorscheme.spanLabel
 
 
 yearLabel : Colorscheme -> Float -> Int -> Form
 yearLabel colorscheme xpos yr =
   toString yr
-    |> fromString
-    |> style { defaultStyle | color = colorscheme.axisLabel }
-    |> text
-    |> move ( xpos, -15.0 )
+    |> drawLabel colorscheme.axisLabel xpos -15.0
 
 
 drawTimeAxis : Model -> List Form
@@ -178,16 +188,19 @@ spanSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.span)
 
 
+placeYear : Model -> Int -> Float
+placeYear model year =
+  toFloat (year - model.centralYear) * model.unit
+
+
 drawTimeSpan : Model -> ( Int, TimeSpan ) -> List Form
 drawTimeSpan model ( index, timeSpan ) =
   let
     begin =
-      toFloat (timeSpan.from.year - model.centralYear)
-        * model.unit
+      placeYear model timeSpan.from.year
 
     end =
-      toFloat (timeSpan.to.year - model.centralYear)
-        * model.unit
+      placeYear model timeSpan.to.year
 
     vSign =
       if index % 2 == 0 then
@@ -223,8 +236,17 @@ drawTimeSpan model ( index, timeSpan ) =
     ]
 
 
-drawTimeSpans : Model -> List Form
-drawTimeSpans model =
+drawLabeledEvent : Model -> LabeledEvent -> List Form
+drawLabeledEvent model levent =
+  let
+    xpos =
+      placeYear model levent.when.year
+  in
+    [ eventLabel model.colorscheme xpos 250.0 levent.label ]
+
+
+drawTimeline : Model -> List Form
+drawTimeline model =
   let
     timeSpanLayers =
       model.timeline.timeSpans
@@ -236,15 +258,10 @@ drawTimeSpans model =
 
     eventLayers =
       model.timeline.events
-        |> TODO
+        |> \x -> x
   in
     List.concatMap (drawTimeSpan model) timeSpanLayers
-      |> List.append TODO
-
-
-drawTimeline : Model -> List Form
-drawTimeline =
-  drawTimeSpans
+      |> List.append (List.concatMap (drawLabeledEvent model) eventLayers)
 
 
 background : Model -> List Form
