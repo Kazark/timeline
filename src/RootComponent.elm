@@ -2,7 +2,7 @@ module RootComponent (..) where
 
 import Color exposing (..)
 import Graphics.Collage exposing (..)
-import Graphics.Element exposing (Element)
+import Graphics.Element exposing (Element, widthOf, leftAligned)
 import History exposing (..)
 import Data exposing (timeline)
 import Positioning exposing (packLayers)
@@ -25,6 +25,7 @@ type alias Colorscheme =
   , span : Color
   , spanLabel : Color
   , eventLabel : Color
+  , event : Color
   }
 
 
@@ -35,7 +36,8 @@ dark =
   , axis = lightGray
   , span = lightBlue
   , spanLabel = white
-  , eventLabel = green
+  , eventLabel = white
+  , event = green
   }
 
 
@@ -46,7 +48,8 @@ light =
   , axis = darkCharcoal
   , span = darkBlue
   , spanLabel = black
-  , eventLabel = green
+  , eventLabel = black
+  , event = green
   }
 
 
@@ -183,6 +186,16 @@ drawTimeAxis model =
     ]
 
 
+eventSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
+eventSegment colorscheme pt1 pt2 =
+  segment pt1 pt2 |> traced (solid colorscheme.event)
+
+
+eventUnderline : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
+eventUnderline colorscheme pt1 pt2 =
+  segment pt1 pt2 |> traced (dotted colorscheme.event)
+
+
 spanSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
 spanSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.span)
@@ -241,8 +254,17 @@ drawLabeledEvent model levent =
   let
     xpos =
       placeYear model levent.when.year
+
+    label =
+      eventLabel model.colorscheme xpos 250.0 levent.label
+
+    labelUnderline =
+      eventUnderline model.colorscheme ( xpos - 50.0, 240.0 ) ( xpos + 50.0, 240.0 )
+
+    dateMarker =
+      eventSegment model.colorscheme ( xpos, 240.0 ) ( xpos, 220.0 )
   in
-    [ eventLabel model.colorscheme xpos 250.0 levent.label ]
+    [ label, labelUnderline, dateMarker ]
 
 
 drawTimeline : Model -> List Form
