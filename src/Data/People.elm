@@ -771,4 +771,6 @@ people =
   , meredithKline
   , francisSchaeffer
   , martinBucer
+  , { from = duringYear 1569, to = duringYear 1614, label = "Robert Parker" }
+  , { from = on 1576 Jun 6, to = on 1649 Oct 3, label = "Giovanni Deodati" }
   ]
