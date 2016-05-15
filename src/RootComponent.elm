@@ -89,7 +89,7 @@ init : Model
 init =
   { timeline = timeline
   , centralYear = 1650
-  , height = 900
+  , height = 1000
   , width = 800
   , unit = 10.0
   , zoom = Year

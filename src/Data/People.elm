@@ -773,4 +773,8 @@ people =
   , martinBucer
   , { from = duringYear 1569, to = duringYear 1614, label = "Robert Parker" }
   , { from = on 1576 Jun 6, to = on 1649 Oct 3, label = "Giovanni Deodati" }
+  , { from = on 1596 Mar 31, to = on 1650 Feb 11, label = "Rene Descartes" }
+  , { from = duringYear 1513, to = on 1589 Sep 16, label = "Michael Baius" }
+  , { from = on 1585 Oct 28, to = on 1638 May 6, label = "Cornelius Jansen" }
+  , { from = on 1623 Jun 19, to = on 1662 Aug 19, label = "Blaise Pascal" }
   ]
