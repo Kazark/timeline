@@ -771,6 +771,7 @@ people =
   , meredithKline
   , francisSchaeffer
   , martinBucer
+  , { from = duringYear 1398, to = on 1468 Feb 3, label = "Johannes Gutenberg" }
   , { from = duringYear 1569, to = duringYear 1614, label = "Robert Parker" }
   , { from = on 1576 Jun 6, to = on 1649 Oct 3, label = "Giovanni Deodati" }
   , { from = on 1596 Mar 31, to = on 1650 Feb 11, label = "Rene Descartes" }
