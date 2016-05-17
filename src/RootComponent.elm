@@ -20,7 +20,7 @@ type ZoomLevel
 
 zoomOut : ZoomLevel -> ZoomLevel
 zoomOut zlvl =
-    case zlvl of
+  case zlvl of
         Month -> Year
         Year -> Decade
         Decade -> Century
@@ -28,7 +28,7 @@ zoomOut zlvl =
 
 zoomIn : ZoomLevel -> ZoomLevel
 zoomIn zlvl =
-    case zlvl of
+  case zlvl of
         Month -> Month
         Year -> Month
         Decade -> Year
@@ -116,46 +116,46 @@ convert zoomLv1 zoomLv2 x =
 
 convertUp : ZoomLevel -> Float -> Float
 convertUp zoomLv =
-    convert zoomLv (zoomOut zoomLv)
+  convert zoomLv (zoomOut zoomLv)
 
 convertDown : ZoomLevel -> Float -> Float
 convertDown zoomLv =
-    convert zoomLv (zoomIn zoomLv)
+  convert zoomLv (zoomIn zoomLv)
 
 timeUnitsToYears : ZoomLevel -> Int -> Int
 timeUnitsToYears zoomLv units =
-    convert zoomLv Year (toFloat units)
+  convert zoomLv Year (toFloat units)
     |> floor
 
 pixelsToTimeUnits : Model -> Float -> Float
 pixelsToTimeUnits model pixels =
-    pixels / model.unit
+  pixels / model.unit
 
 halfScreenInPixels : Model -> Float
 halfScreenInPixels model =
-    (toFloat model.width) / 2.0
+  (toFloat model.width) / 2.0
 
 halfScreenInTimeUnits : Model -> Float
 halfScreenInTimeUnits model =
-    halfScreenInPixels model
+  halfScreenInPixels model
     |> pixelsToTimeUnits model
 
 halfAxisInUppedTimeUnits : Model -> Int
 halfAxisInUppedTimeUnits model =
-    -- The -2 is because we don't want to draw too close to the edge when
-    -- floor doesn't change the number much
+  -- The -2 is because we don't want to draw too close to the edge when
+  -- floor doesn't change the number much
     halfScreenInTimeUnits model - 2
     |> convertUp model.zoom
     |> floor
 
 downTimeUnits : Model -> Int -> Float
 downTimeUnits model =
-    toFloat
+  toFloat
     >> convertDown (zoomOut model.zoom)
 
 halfAxisInTimeUnits : Model -> Int
 halfAxisInTimeUnits model =
-    halfAxisInUppedTimeUnits model
+  halfAxisInUppedTimeUnits model
     |> downTimeUnits model
     |> round
 
@@ -186,13 +186,11 @@ update ( ( w, h ), keysDown ) model =
     else
       newModel
 
-
-
 axisSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
 axisSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.axis)
 
-vLineSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form 
+vLineSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
 vLineSegment colorscheme pt1 pt2 =
   segment pt1 pt2 |> traced (solid colorscheme.vline)
 
@@ -218,48 +216,56 @@ spanLabel colorscheme =
 yearLabel : Colorscheme -> Float -> Int -> Form
 yearLabel colorscheme xpos yr =
   toString yr
-    |> drawLabel colorscheme.axisLabel xpos -15.0
+    |> drawLabel colorscheme.axisLabel xpos -10.0
 
 range : Int -> Int -> List Int
 range from to =
     if from >= to
     then []
-    else
-        from :: range (from + 1) to
+  else
+    from :: range (from + 1) to
 
-vLineOffsets : Model -> List Float
-vLineOffsets model =
-    halfAxisInUppedTimeUnits model
+tickOffsets : Model -> List ( Int, Float )
+tickOffsets model =
+  halfAxisInUppedTimeUnits model
     * 2
     + 1
     |> range 0
-    |> List.map (downTimeUnits model >> (*) model.unit)
+    |> List.map
+        (\x ->
+          let
+            y =
+              downTimeUnits model x
+          in
+            ( round y, y * model.unit )
+        )
 
-drawVLine : Model -> Float -> Form
-drawVLine model xpos =
-    let vradius = (toFloat model.height) / 2.0
-    in vLineSegment model.colorscheme (xpos, vradius) (xpos, -vradius)
 
-drawVLines : Model -> Float -> Float -> List Form
-drawVLines model begin end =
-    vLineOffsets model
-    |> List.map ((+) begin >> drawVLine model)
+drawTick : Model -> Int -> Float -> List Form
+drawTick model year xpos =
+  let vradius = (toFloat model.height) / 2.0
+      h = model.unit * 0.5
+  in
+    [ vLineSegment model.colorscheme ( xpos, vradius ) ( xpos, -vradius )
+    , axisSegment model.colorscheme ( xpos, -h ) ( xpos, h )
+    , yearLabel model.colorscheme xpos year
+    ]
+
+
+drawTicks : Model -> Int -> Float -> List Form
+drawTicks model beginYear beginPos =
+  tickOffsets model
+    |> List.concatMap (\( yearOffset, posOffset ) -> drawTick model (yearOffset + beginYear) (posOffset + beginPos))
+
 
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
   let xmax = halfScreenInPixels model
+      minYear' = minYear model
       minYearPos = (toFloat <| halfAxisInTimeUnits model) * -model.unit
-      maxYearPos = -minYearPos
   in
-    drawVLines model minYearPos maxYearPos
-    ++ [ axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
-    , axisSegment model.colorscheme ( minYearPos, -model.unit ) ( minYearPos, model.unit )
-    , yearLabel model.colorscheme minYearPos <| minYear model
-    , axisSegment model.colorscheme ( 0.0, -model.unit ) ( 0.0, model.unit )
-    , yearLabel model.colorscheme 0.0 model.centralYear
-    , axisSegment model.colorscheme ( maxYearPos, -model.unit ) ( maxYearPos, model.unit )
-    , yearLabel model.colorscheme maxYearPos <| maxYear model
-    ]
+    axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
+      :: drawTicks model minYear' minYearPos
 
 
 eventSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
@@ -344,7 +350,7 @@ drawLabeledEvent model levent =
 
 isOnScreen : Model -> TimeSpan -> Bool
 isOnScreen model x =
-    x.from.year < maxYear model && x.to.year > minYear model
+  x.from.year < maxYear model && x.to.year > minYear model
 
 
 drawTimeline : Model -> List Form
@@ -363,7 +369,7 @@ drawTimeline model =
         |> \x -> x
   in
     (List.concatMap (drawTimeSpan model) timeSpanLayers)
-    ++ (List.concatMap (drawLabeledEvent model) eventLayers)
+      ++ (List.concatMap (drawLabeledEvent model) eventLayers)
 
 
 background : Model -> List Form
