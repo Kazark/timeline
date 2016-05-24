@@ -15,7 +15,7 @@ leftArrow =
 
 rightArrow : KeyCode
 rightArrow =
-  40
+  39
 
 
 h : KeyCode
