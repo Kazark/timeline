@@ -35,6 +35,7 @@ people =
   , { from = duringYear  1266       , to = on          1308 Nov 8 , label = "John Duns Scotus" }
   , { from = duringYear  1287       , to = duringYear  1347       , label = "William of Ockham" }
   , { from = duringYear  1320       , to = on          1384 Dec 31, label = "John Wycliffe" }
+  , { from = duringMonth 1340 Oct   , to = on          1384 Aug 20, label = "Gerard Groote" }
   , { from = duringYear  1369       , to = on          1415 Jul 6 , label = "Jan Hus" }
   , { from = duringYear  1380       , to = on          1471 Jul 25, label = "Thomas a Kempis" }
   , { from = duringYear  1398       , to = on          1468 Feb 3 , label = "Johannes Gutenberg" }
