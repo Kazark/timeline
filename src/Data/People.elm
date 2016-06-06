@@ -11,11 +11,15 @@ people =
   , { from = duringYear  69         , to = duringYear  155        , label = "Polycarp" }
   , { from = duringYear  100        , to = duringYear  165        , label = "Justin Martyr" }
   , { from = duringYear  155        , to = duringYear  240        , label = "Tertullian" }
+  , { from = duringYear  184        , to = duringYear  153        , label = "Origen" }
   , { from = duringYear  216        , to = duringYear  274        , label = "Mani" }
   , { from = duringYear  250        , to = duringYear  336        , label = "Arius" }
   , { from = duringYear  260        , to = duringYear  339        , label = "Eusebius" }
   , { from = on          272 Feb 27 , to = on          337 May 22 , label = "Constantine I" }
   , { from = duringYear  297        , to = on          373 May 2  , label = "Athanasius of Alexandria" }
+  -- Years on Didymus the Blind from footnote in Owen Vol 3 (Banner of Truth edition, page 28).
+  -- Wikipedia has 313 - 398.
+  , { from = duringYear  311        , to = duringYear  396        , label = "Didymus the Blind" }
   , { from = duringYear  320        , to = duringMonth 379 Jan    , label = "Basil of Caesarea" }
   , { from = duringYear  329        , to = on          390 Jan 25 , label = "Gregory of Nazianzus" }
   , { from = duringYear  335        , to = duringYear  395        , label = "Gregory of Nyssa" }
@@ -29,6 +33,7 @@ people =
   , { from = duringYear  1090       , to = on          1153 Aug 20, label = "Bernard of Clairvaux" }
   , { from = duringYear  1096       , to = duringMonth 1160 Jul   , label = "Peter Lombard" }
   , { from = duringYear  1140       , to = duringYear  1205       , label = "Peter Waldo" }
+  , { from = duringYear  1193       , to = duringYear  1280       , label = "Albertus Magnus" }
   , { from = duringYear  1221       , to = on          1274 Jul 15, label = "Bonaventure" }
   , { from = duringYear  1225       , to = on          1274 Mar 7 , label = "Thomas Aquinas" }
   , { from = duringYear  1265       , to = duringYear  1321       , label = "Dante Alighieri" }

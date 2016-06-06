@@ -1,7 +1,11 @@
-module Positioning (packLayers) where
+module Positioning (ArrangedTimeline, arrange) where
 
 import History exposing (..)
 
+type alias ArrangedTimeline =
+  { timeSpans : List (Int, TimeSpan)
+  , events : List LabeledEvent
+  }
 
 findNext : ( Int, TimeSpan ) -> List TimeSpan -> ( List ( Int, TimeSpan ), List TimeSpan )
 findNext ( layerNum, timeSpan ) timeSpans =
@@ -38,3 +42,10 @@ packLayers index timeSpans =
 
     [] ->
       []
+
+arrange : Timeline -> ArrangedTimeline
+arrange timeline =
+    { timeSpans = packLayers 0 timeline.timeSpans
+    , events = timeline.events
+    }
+

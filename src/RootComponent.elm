@@ -5,7 +5,7 @@ import Graphics.Collage exposing (..)
 import Graphics.Element exposing (Element, widthOf, leftAligned)
 import History exposing (..)
 import Data exposing (timeline)
-import Positioning exposing (packLayers)
+import Positioning exposing (ArrangedTimeline, arrange)
 import NormalMode exposing (toScroll)
 import Text exposing (..)
 import Set exposing (Set)
@@ -74,7 +74,7 @@ light =
 
 
 type alias Model =
-  { timeline : Timeline
+  { timeline : ArrangedTimeline
   , centralYear : Int
   , height : Int
   , width : Int
@@ -87,7 +87,7 @@ type alias Model =
 
 init : Model
 init =
-  { timeline = timeline
+  { timeline = arrange timeline
   , centralYear = 1650
   , height = 1000
   , width = 800
@@ -348,8 +348,8 @@ drawLabeledEvent model levent =
   in
     [ label, labelUnderline, dateMarker ]
 
-isOnScreen : Model -> TimeSpan -> Bool
-isOnScreen model x =
+isOnScreen : Model -> (Int, TimeSpan) -> Bool
+isOnScreen model (_, x) =
   x.from.year < maxYear model && x.to.year > minYear model
 
 
@@ -359,7 +359,6 @@ drawTimeline model =
     timeSpanLayers =
       model.timeline.timeSpans
         |> List.filter (isOnScreen model)
-        |> packLayers 0
 
     firstEventLayer =
       List.length timeSpanLayers
