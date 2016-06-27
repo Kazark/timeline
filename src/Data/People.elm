@@ -24,6 +24,7 @@ people =
   , { from = duringYear  320        , to = duringMonth 379 Jan    , label = "Basil of Caesarea" }
   , { from = duringYear  329        , to = on          390 Jan 25 , label = "Gregory of Nazianzus" }
   , { from = duringYear  335        , to = duringYear  395        , label = "Gregory of Nyssa" }
+  , { from = duringYear  340        , to = on          397 Apr 4  , label = "Aurelius Ambrosius" }
   , { from = duringYear  347        , to = on          420 Sep 30 , label = "Jerome" }
   , { from = duringYear  349        , to = duringYear  407        , label = "John Chrysostom" }
   , { from = on          354 Nov 13 , to = on          430 Aug 28 , label = "Augustine of Hippo" }
