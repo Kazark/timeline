@@ -17,6 +17,7 @@ people =
   , { from = duringYear  260        , to = duringYear  339        , label = "Eusebius" }
   , { from = on          272 Feb 27 , to = on          337 May 22 , label = "Constantine I" }
   , { from = duringYear  297        , to = on          373 May 2  , label = "Athanasius of Alexandria" }
+  , { from = duringYear  310        , to = duringYear  367        , label = "Hilary of Poitiers" }
   -- Years on Didymus the Blind from footnote in Owen Vol 3 (Banner of Truth edition, page 28).
   -- Wikipedia has 313 - 398.
   , { from = duringYear  311        , to = duringYear  396        , label = "Didymus the Blind" }
@@ -27,6 +28,9 @@ people =
   , { from = duringYear  349        , to = duringYear  407        , label = "John Chrysostom" }
   , { from = on          354 Nov 13 , to = on          430 Aug 28 , label = "Augustine of Hippo" }
   , { from = duringYear  360        , to = duringYear  418        , label = "Pelagius" }
+  , { from = duringYear  390        , to = duringYear  455        , label = "Prosper of Aquitaine" }
+  -- Date of death for Fulgentius given as 527 or 533. I averaged it to 530.
+  , { from = duringYear  462        , to = on          530 Jan 1  , label = "Fulgentius of Ruspe" }
   , { from = duringYear  480        , to = duringYear  524        , label = "Anicius Boethius" }
   , { from = duringYear  1033       , to = on          1109 Apr 21, label = "Anselm of Canterbury" }
   , { from = duringYear  1079       , to = on          1142 Apr 21, label = "Peter Abelard" }
@@ -39,6 +43,7 @@ people =
   , { from = duringYear  1265       , to = duringYear  1321       , label = "Dante Alighieri" }
   , { from = duringYear  1266       , to = on          1308 Nov 8 , label = "John Duns Scotus" }
   , { from = duringYear  1287       , to = duringYear  1347       , label = "William of Ockham" }
+  , { from = duringYear  1290       , to = on          1349 Aug 26, label = "Thomas Bradwardine" }
   , { from = duringYear  1320       , to = on          1384 Dec 31, label = "John Wycliffe" }
   , { from = duringMonth 1340 Oct   , to = on          1384 Aug 20, label = "Gerard Groote" }
   , { from = duringYear  1369       , to = on          1415 Jul 6 , label = "Jan Hus" }
