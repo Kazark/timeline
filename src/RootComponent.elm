@@ -10,68 +10,8 @@ import NormalMode exposing (toScroll)
 import Text exposing (..)
 import Set exposing (Set)
 import Char exposing (KeyCode)
-
-
-type ZoomLevel
-  = Month
-  | Year
-  | Decade
-  | Century
-
-zoomOut : ZoomLevel -> ZoomLevel
-zoomOut zlvl =
-  case zlvl of
-        Month -> Year
-        Year -> Decade
-        Decade -> Century
-        Century -> Century
-
-zoomIn : ZoomLevel -> ZoomLevel
-zoomIn zlvl =
-  case zlvl of
-        Month -> Month
-        Year -> Month
-        Decade -> Year
-        Century -> Decade
-
-
-type alias Colorscheme =
-  { bg : Color
-  , axisLabel : Color
-  , axis : Color
-  , vline : Color
-  , span : Color
-  , spanLabel : Color
-  , eventLabel : Color
-  , event : Color
-  }
-
-
-dark : Colorscheme
-dark =
-  { bg = black
-  , axisLabel = white
-  , axis = lightGray
-  , vline = darkCharcoal
-  , span = lightBlue
-  , spanLabel = white
-  , eventLabel = white
-  , event = green
-  }
-
-
-light : Colorscheme
-light =
-  { bg = lightGray
-  , axisLabel = black
-  , axis = darkCharcoal
-  , vline = darkGray
-  , span = darkBlue
-  , spanLabel = black
-  , eventLabel = black
-  , event = green
-  }
-
+import Colorscheme exposing (..)
+import Zoom exposing (..)
 
 type alias Model =
   { timeline : ArrangedTimeline
@@ -84,7 +24,6 @@ type alias Model =
   , colorscheme : Colorscheme
   }
 
-
 init : Model
 init =
   { timeline = arrange timeline
@@ -96,36 +35,6 @@ init =
   , scrollFactor = 10
   , colorscheme = dark
   }
-
-convert : ZoomLevel -> ZoomLevel -> Float -> Float
-convert zoomLv1 zoomLv2 x =
-    case (zoomLv1, zoomLv2) of
-        (Month, Year) -> x / 12
-        (Month, Decade) -> convert Month Year x |> convert Year Decade
-        (Month, Century) -> convert Month Decade x |> convert Decade Century
-        (Year, Month) -> x * 12
-        (Year, Decade) -> x / 10
-        (Year, Century) -> convert Year Decade x |> convert Decade Century
-        (Decade, Month) -> convert Decade Year x |> convert Year Month
-        (Decade, Year) -> x * 10
-        (Decade, Century) -> x / 10
-        (Century, Month) -> convert Century Decade x |> convert Decade Month
-        (Century, Year) -> convert Century Decade x |> convert Decade Year
-        (Century, Decade) -> x * 10
-        _ -> x
-
-convertUp : ZoomLevel -> Float -> Float
-convertUp zoomLv =
-  convert zoomLv (zoomOut zoomLv)
-
-convertDown : ZoomLevel -> Float -> Float
-convertDown zoomLv =
-  convert zoomLv (zoomIn zoomLv)
-
-timeUnitsToYears : ZoomLevel -> Int -> Int
-timeUnitsToYears zoomLv units =
-  convert zoomLv Year (toFloat units)
-    |> floor
 
 pixelsToTimeUnits : Model -> Float -> Float
 pixelsToTimeUnits model pixels =
