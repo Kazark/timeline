@@ -12,6 +12,7 @@ import Set exposing (Set)
 import Char exposing (KeyCode)
 import Colorscheme exposing (..)
 import Zoom exposing (..)
+import Util exposing (..)
 
 type alias Model =
   { timeline : ArrangedTimeline
@@ -72,11 +73,9 @@ minYear : Model -> Int
 minYear model =
   model.centralYear - halfAxisInTimeUnits model
 
-
 maxYear : Model -> Int
 maxYear model =
   model.centralYear + halfAxisInTimeUnits model
-
 
 update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
 update ( ( w, h ), keysDown ) model =
@@ -95,45 +94,6 @@ update ( ( w, h ), keysDown ) model =
     else
       newModel
 
-axisSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
-axisSegment colorscheme pt1 pt2 =
-  segment pt1 pt2 |> traced (solid colorscheme.axis)
-
-vLineSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
-vLineSegment colorscheme pt1 pt2 =
-  segment pt1 pt2 |> traced (solid colorscheme.vline)
-
-
-drawLabel : Color -> Float -> Float -> String -> Form
-drawLabel color xpos ypos label =
-  fromString label
-    |> style { defaultStyle | color = color }
-    |> text
-    |> move ( xpos, ypos )
-
-
-eventLabel : Colorscheme -> Float -> Float -> String -> Form
-eventLabel colorscheme =
-  drawLabel colorscheme.eventLabel
-
-
-spanLabel : Colorscheme -> Float -> Float -> String -> Form
-spanLabel colorscheme =
-  drawLabel colorscheme.spanLabel
-
-
-yearLabel : Colorscheme -> Float -> Int -> Form
-yearLabel colorscheme xpos yr =
-  toString yr
-    |> drawLabel colorscheme.axisLabel xpos -10.0
-
-range : Int -> Int -> List Int
-range from to =
-    if from >= to
-    then []
-  else
-    from :: range (from + 1) to
-
 tickOffsets : Model -> List ( Int, Float )
 tickOffsets model =
   halfAxisInUppedTimeUnits model
@@ -149,7 +109,6 @@ tickOffsets model =
             ( round y, y * model.unit )
         )
 
-
 drawTick : Model -> Int -> Float -> List Form
 drawTick model year xpos =
   let vradius = (toFloat model.height) / 2.0
@@ -160,12 +119,10 @@ drawTick model year xpos =
     , yearLabel model.colorscheme xpos year
     ]
 
-
 drawTicks : Model -> Int -> Float -> List Form
 drawTicks model beginYear beginPos =
   tickOffsets model
     |> List.concatMap (\( yearOffset, posOffset ) -> drawTick model (yearOffset + beginYear) (posOffset + beginPos))
-
 
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
@@ -176,26 +133,9 @@ drawTimeAxis model =
     axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
       :: drawTicks model minYear' minYearPos
 
-
-eventSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
-eventSegment colorscheme pt1 pt2 =
-  segment pt1 pt2 |> traced (dotted colorscheme.event)
-
-
-eventUnderline : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
-eventUnderline colorscheme pt1 pt2 =
-  segment pt1 pt2 |> traced (dotted colorscheme.event)
-
-
-spanSegment : Colorscheme -> ( Float, Float ) -> ( Float, Float ) -> Form
-spanSegment colorscheme pt1 pt2 =
-  segment pt1 pt2 |> traced (solid colorscheme.span)
-
-
 placeYear : Model -> Int -> Float
 placeYear model year =
   toFloat (year - model.centralYear) * model.unit
-
 
 drawTimeSpan : Model -> ( Int, TimeSpan ) -> List Form
 drawTimeSpan model ( index, timeSpan ) =
@@ -239,7 +179,6 @@ drawTimeSpan model ( index, timeSpan ) =
     , spanLabel model.colorscheme labelAtX labelAtY timeSpan.label
     ]
 
-
 drawLabeledEvent : Model -> LabeledEvent -> List Form
 drawLabeledEvent model levent =
   let
@@ -261,7 +200,6 @@ isOnScreen : Model -> (Int, TimeSpan) -> Bool
 isOnScreen model (_, x) =
   x.from.year < maxYear model && x.to.year > minYear model
 
-
 drawTimeline : Model -> List Form
 drawTimeline model =
   let
@@ -279,7 +217,6 @@ drawTimeline model =
     (List.concatMap (drawTimeSpan model) timeSpanLayers)
       ++ (List.concatMap (drawLabeledEvent model) eventLayers)
 
-
 background : Model -> List Form
 background model =
   [ rect
@@ -288,10 +225,10 @@ background model =
       |> filled model.colorscheme.bg
   ]
 
-
 view : Model -> Element
 view model =
   [ background, drawTimeAxis, drawTimeline ]
     |> List.map (\f -> f model)
     |> List.concat
     |> collage model.width model.height
+
