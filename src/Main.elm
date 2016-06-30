@@ -1,7 +1,6 @@
-module Main (..) where
+module Main (main) where
 
 import RootComponent
-import Html
 import Window
 import Graphics.Element exposing (Element)
 import Keyboard

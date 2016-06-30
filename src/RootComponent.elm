@@ -1,18 +1,16 @@
-module RootComponent (..) where
+module RootComponent (update, init, view) where
 
-import Color exposing (..)
-import Graphics.Collage exposing (..)
+import Graphics.Collage exposing (Form, rect, filled, collage)
 import Graphics.Element exposing (Element, widthOf, leftAligned)
-import History exposing (..)
+import History exposing (current, TimeSpan, LabeledEvent)
 import Data exposing (timeline)
 import Positioning exposing (ArrangedTimeline, arrange)
 import NormalMode exposing (toScroll)
-import Text exposing (..)
 import Set exposing (Set)
 import Char exposing (KeyCode)
 import Colorscheme exposing (..)
 import Zoom exposing (..)
-import Util exposing (..)
+import Util exposing (range)
 
 type alias Model =
   { timeline : ArrangedTimeline
