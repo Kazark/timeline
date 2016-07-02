@@ -33,6 +33,7 @@ people =
   -- Date of death for Fulgentius given as 527 or 533. I averaged it to 530.
   , { from = duringYear  462        , to = on          530 Jan 1  , label = "Fulgentius of Ruspe" }
   , { from = duringYear  480        , to = duringYear  524        , label = "Anicius Boethius" }
+  , { from = duringYear  540        , to = on          604 Mar 12 , label = "Gregory the Great" }
   , { from = duringYear  1033       , to = on          1109 Apr 21, label = "Anselm of Canterbury" }
   , { from = duringYear  1079       , to = on          1142 Apr 21, label = "Peter Abelard" }
   , { from = duringYear  1090       , to = on          1153 Aug 20, label = "Bernard of Clairvaux" }
@@ -74,12 +75,15 @@ people =
   , { from = on          1554 Oct 1 , to = on          1623 Jan 15, label = "Leonardus Lessius" }
   , { from = duringYear  1558       , to = duringYear  1602       , label = "William Perkins" }
   , { from = on          1560 Oct 10, to = on          1609 Oct 19, label = "Jacobus Arminius" }
+  , { from = on          1563 Jan 30, to = on          1641 Jan 11, label = "Franciscus Gomarus" }
   , { from = duringYear  1569       , to = duringYear  1614       , label = "Robert Parker" }
+  , { from = on          1569 Jul 19, to = on          1622 Sep 29, label = "Conrad Vorstius" }
   , { from = duringYear  1573       , to = duringYear  1617       , label = "Paul Baynes" }
   , { from = duringYear  1576       , to = on          1633 Nov 14, label = "William Ames" }
   , { from = on          1576 Jun 6 , to = on          1649 Oct 3 , label = "Giovanni Deodati" }
   , { from = duringYear  1577       , to = duringYear  1635       , label = "Richard Sibbes" }
   , { from = duringYear  1579       , to = duringYear  1625       , label = "John Cameron" }
+  , { from = on          1579 Jan 4 , to = on          1629 Apr 8 , label = "Willem Teellinck" }
   , { from = duringYear  1581       , to = duringYear  1656       , label = "James Ussher" }
   , { from = on          1583 Apr 10, to = on          1645 Aug 28, label = "Hugo Grotius" }
   , { from = duringYear  1583       , to = duringYear  1652       , label = "Thomas Adams" }
