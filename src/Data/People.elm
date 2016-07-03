@@ -137,6 +137,7 @@ people =
   , { from = on          1685 Mar 18, to = on          1752 Nov 6 , label = "Ralph Erskine" }
   , { from = on          1697 Nov 23, to = on          1771 Oct 14, label = "John Gill" }
   , { from = on          1703 Oct 5 , to = on          1758 Mar 22, label = "Jonathan Edwards" }
+  , { from = duringYear  1706       , to = duringYear  1774       , label = "Alexander Comrie" }
   , { from = on          1710 Apr 26, to = on          1796 Oct 7 , label = "Thomas Reid" }
   , { from = on          1711 May 7 , to = on          1776 Aug 25, label = "David Hume" }
   , { from = on          1714 Dec 27, to = on          1770 Sep 30, label = "George Whitefield" }
