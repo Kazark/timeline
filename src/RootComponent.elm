@@ -176,8 +176,12 @@ drawLabeledEvent model (index, levent) =
         height = layerHeight model vSign layer
         labelAtY = labelHeight model vSign height
         label = eventLabel model.colorscheme xposMiddle labelAtY levent.description
+        wing = let diff = xposR - xposL
+               in if diff > 100.0
+                  then 5.0
+                  else (100.0 - diff)/2.0
         labelUnderline =
-            eventUnderline model.colorscheme (xposMiddle - 50.0, height) (xposMiddle + 50.0, height)
+            eventUnderline model.colorscheme (xposL - wing, height) (xposR + wing, height)
         dateMarkerL = eventSegment model.colorscheme (xposL, height) (xposL, 0.0)
         dateMarkerR = eventSegment model.colorscheme (xposR, height) (xposR, 0.0)
     in [label, labelUnderline, dateMarkerL, dateMarkerR]
