@@ -38,9 +38,13 @@ packTimeSpanLayers index timeSpans =
         ( layered, [] ) -> layered
     [] -> []
 
+isTimeSpanWithinRangeOfEvent : TimeSpan -> Event -> Bool
+isTimeSpanWithinRangeOfEvent timeSpan event =
+    event.year - 10 < timeSpan.to.year && timeSpan.from.year < event.year + 10
+
 findEventLayer' : List (Int, TimeSpan) -> Event -> Int
 findEventLayer' packedTimeSpans event =
-    List.filter (\(_,ts) -> ts.from.year < event.year && event.year < ts.to.year) packedTimeSpans
+    List.filter (\(_,ts) -> isTimeSpanWithinRangeOfEvent ts event) packedTimeSpans
     |> List.map (\(layer,_) -> layer)
     |> List.foldl max 0
 
