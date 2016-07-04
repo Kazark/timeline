@@ -38,23 +38,29 @@ packTimeSpanLayers index timeSpans =
         ( layered, [] ) -> layered
     [] -> []
 
-isTimeSpanWithinRangeOfEvent : TimeSpan -> Event -> Bool
-isTimeSpanWithinRangeOfEvent timeSpan event =
-    event.year - 10 < timeSpan.to.year && timeSpan.from.year < event.year + 10
+findEventLayer' : List (Int, Event, Event) -> Int -> Int -> Int
+findEventLayer' packedTimeSpans eventFrom eventTo =
+    (List.filter (\(_,from, to) -> eventFrom < to.year && eventTo > from.year) packedTimeSpans
+     |> List.map (\(layer,_,_) -> layer)
+     |> List.foldr max 0) + 1
 
-findEventLayer' : List (Int, TimeSpan) -> Event -> Int
-findEventLayer' packedTimeSpans event =
-    List.filter (\(_,ts) -> isTimeSpanWithinRangeOfEvent ts event) packedTimeSpans
-    |> List.map (\(layer,_) -> layer)
-    |> List.foldl max 0
+findEventLayer : LabeledEvent -> (List (Int, LabeledEvent), List (Int, Event, Event)) -> (List (Int, LabeledEvent), List (Int, Event, Event))
+findEventLayer levent (events, packedTimeSpans) =
+    let eventFrom = levent.when.year - 10
+        eventTo = levent.when.year + 10
+        layer = findEventLayer' packedTimeSpans eventFrom eventTo
+    in ((layer, levent) :: events, (layer, duringYear eventFrom, duringYear eventTo) :: packedTimeSpans)
 
-findEventLayer : List (Int, TimeSpan) -> LabeledEvent -> (Int, LabeledEvent)
-findEventLayer packedTimeSpans labeledEvent =
-    (findEventLayer' packedTimeSpans labeledEvent.when + 1, labeledEvent)
+packEventLayers' : List LabeledEvent -> List (Int, Event, Event) -> List (Int, LabeledEvent)
+packEventLayers' events packedTimeSpans =
+    List.sortBy (\e -> e.when.year) events
+    |> List.foldr findEventLayer ([], packedTimeSpans)
+    |> fst
 
 packEventLayers : List LabeledEvent -> List (Int, TimeSpan) -> List (Int, LabeledEvent)
-packEventLayers events packedTimeSpans =
-    List.map (findEventLayer packedTimeSpans) events
+packEventLayers events =
+    List.map (\(x,ts) -> (x, ts.from, ts.to))
+    >> packEventLayers' events
 
 arrange : Timeline -> ArrangedTimeline
 arrange timeline =
