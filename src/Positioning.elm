@@ -4,48 +4,59 @@ import History exposing (..)
 
 type alias ArrangedTimeline =
   { timeSpans : List (Int, TimeSpan)
-  , events : List LabeledEvent
+  , events : List (Int, LabeledEvent)
   }
 
-findNext : ( Int, TimeSpan ) -> List TimeSpan -> ( List ( Int, TimeSpan ), List TimeSpan )
-findNext ( layerNum, timeSpan ) timeSpans =
+findNextTimeSpan : ( Int, TimeSpan ) -> List TimeSpan -> ( List ( Int, TimeSpan ), List TimeSpan )
+findNextTimeSpan ( layerNum, timeSpan ) timeSpans =
   case timeSpans of
     next :: rest ->
       if next.from.year > timeSpan.to.year then
         let
           ( layer, unlayered ) =
-            findNext ( layerNum, next ) rest
+            findNextTimeSpan ( layerNum, next ) rest
         in
           ( ( layerNum, timeSpan ) :: layer, unlayered )
       else
         let
           ( layer, unlayered ) =
-            findNext ( layerNum, timeSpan ) rest
+            findNextTimeSpan ( layerNum, timeSpan ) rest
         in
           ( layer, next :: unlayered )
 
     [] ->
       ( [ ( layerNum, timeSpan ) ], [] )
 
-
-packLayers : Int -> List TimeSpan -> List ( Int, TimeSpan )
-packLayers index timeSpans =
+packTimeSpanLayers : Int -> List TimeSpan -> List (Int, TimeSpan)
+packTimeSpanLayers index timeSpans =
   case timeSpans of
     ts :: tss ->
-      case findNext ( index, ts ) tss of
+      case findNextTimeSpan ( index, ts ) tss of
         ( layered, next :: rest ) ->
-          packLayers (index + 1) (next :: rest)
+          packTimeSpanLayers (index + 1) (next :: rest)
             |> List.append layered
+        ( layered, [] ) -> layered
+    [] -> []
 
-        ( layered, [] ) ->
-          layered
+findEventLayer' : List (Int, TimeSpan) -> Event -> Int
+findEventLayer' packedTimeSpans event =
+    List.filter (\(_,ts) -> ts.from.year < event.year && event.year < ts.to.year) packedTimeSpans
+    |> List.map (\(layer,_) -> layer)
+    |> List.foldl max 0
 
-    [] ->
-      []
+findEventLayer : List (Int, TimeSpan) -> LabeledEvent -> (Int, LabeledEvent)
+findEventLayer packedTimeSpans labeledEvent =
+    (findEventLayer' packedTimeSpans labeledEvent.when + 1, labeledEvent)
+
+packEventLayers : List LabeledEvent -> List (Int, TimeSpan) -> List (Int, LabeledEvent)
+packEventLayers events packedTimeSpans =
+    List.map (findEventLayer packedTimeSpans) events
 
 arrange : Timeline -> ArrangedTimeline
 arrange timeline =
-    { timeSpans = packLayers 0 timeline.timeSpans
-    , events = timeline.events
+    let packedTimeSpans = packTimeSpanLayers 0 timeline.timeSpans
+        packedEvents = packEventLayers timeline.events packedTimeSpans
+    in { timeSpans = packedTimeSpans
+    , events = packedEvents
     }
 

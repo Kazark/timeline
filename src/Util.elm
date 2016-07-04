@@ -6,3 +6,5 @@ range from to =
     then []
     else from :: range (from + 1) to
 
+(|>>) : (a -> b) -> (a -> b -> c) -> a -> c
+(|>>) f1 f2 x = f2 x (f1 x)
