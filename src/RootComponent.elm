@@ -75,6 +75,10 @@ maxYear : Model -> Int
 maxYear model =
   model.centralYear + halfAxisInTimeUnits model
 
+updateCentralYear : Model -> Set KeyCode -> Int
+updateCentralYear model keysDown =
+  model.centralYear + (toScroll keysDown) * model.scrollFactor
+
 update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
 update ( ( w, h ), keysDown ) model =
   let
@@ -87,8 +91,8 @@ update ( ( w, h ), keysDown ) model =
   in
     if maxYear newModel > current.year then
       { newModel | centralYear = current.year - halfAxisInTimeUnits model }
-    else if minYear newModel < 1 then
-      { newModel | centralYear = 1 + halfAxisInTimeUnits model }
+    else if minYear newModel < model.scrollFactor then
+      { newModel | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
     else
       newModel
 

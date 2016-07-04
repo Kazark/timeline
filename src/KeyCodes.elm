@@ -2,27 +2,39 @@ module KeyCodes (..) where
 
 import Char exposing (KeyCode)
 
-
 shift : KeyCode
-shift =
-  16
-
+shift = 16
 
 leftArrow : KeyCode
-leftArrow =
-  37
-
+leftArrow = 37
 
 rightArrow : KeyCode
-rightArrow =
-  39
-
+rightArrow = 39
 
 h : KeyCode
-h =
-  72
-
+h = 72
 
 l : KeyCode
-l =
-  76
+l = 76
+
+zero : KeyCode
+zero = 48
+
+--one : KeyCode
+--one = 49
+
+--two : KeyCode
+--two = 50
+
+--three : KeyCode
+--three = 51
+
+four : KeyCode
+four = 52
+
+--five : KeyCode
+--five = 53
+
+six : KeyCode
+six = 54
+

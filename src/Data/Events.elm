@@ -6,7 +6,8 @@ import History exposing (..)
 
 events : List LabeledEvent
 events =
-  [ { when = duringMonth 313 Feb    , label = "Edict of Milan" }
+  [ { when = duringYear  50         , label = "Council of Jerusalem" }
+  , { when = duringMonth 313 Feb    , label = "Edict of Milan" }
   , { when = duringYear  325        , label = "Council of Nicaea (I)" }
   , { when = duringMonth 359 Jul    , label = "Council of Ariminum" }
   , { when = duringMonth 359 Sep    , label = "Council of Seleucia" }
