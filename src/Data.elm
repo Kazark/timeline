@@ -1,14 +1,11 @@
 module Data (timeline) where
 
 import History exposing (Timeline)
-import Data.Events exposing (events)
 import Data.People exposing (people)
 import Data.Councils exposing (councils)
 
-
 timeline : Timeline
 timeline =
-  { timeSpans = List.append people councils
-                |> List.sortBy (\x -> x.from.year)
-  , events = events
+  { lives = List.sortBy (\x -> x.when.from.year) people
+  , events = List.sortBy (\x -> x.when.from.year) councils
   }

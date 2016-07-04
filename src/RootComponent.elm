@@ -2,7 +2,7 @@ module RootComponent (update, init, view) where
 
 import Graphics.Collage exposing (Form, rect, filled, collage)
 import Graphics.Element exposing (Element, widthOf, leftAligned)
-import History exposing (current, TimeSpan, LabeledEvent)
+import History exposing (current, Life, Event, TimeSpan)
 import Data exposing (timeline)
 import Positioning exposing (ArrangedTimeline, arrange)
 import NormalMode exposing (toScroll)
@@ -150,48 +150,46 @@ labelHeight model vSign height =
       then height + model.unit
       else height - (0.6 * model.unit)
 
-drawTimeSpan : Model -> ( Int, TimeSpan ) -> List Form
-drawTimeSpan model ( index, timeSpan ) =
-    let begin = placeYear model timeSpan.from.year
-        end = placeYear model timeSpan.to.year
+drawTimeSpan : Model -> ( Int, Life ) -> List Form
+drawTimeSpan model ( index, life ) =
+    let begin = placeYear model life.when.from.year
+        end = placeYear model life.when.to.year
         (vSign, layer) = vSignAndLayer index
         height = layerHeight model vSign layer
         heightPlus = height + (model.unit * 0.5)
         heightMinus = height - (model.unit * 0.5)
         labelAtX =
-            toFloat (timeSpan.to.year - timeSpan.from.year) / 2.0 * model.unit + begin
+            toFloat (life.when.to.year - life.when.from.year) / 2.0 * model.unit + begin
         labelAtY = labelHeight model vSign height
     in [ spanSegment model.colorscheme ( begin, height ) ( end, height )
        , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
        , spanSegment model.colorscheme ( end, heightPlus ) ( end, heightMinus )
-       , spanLabel model.colorscheme labelAtX labelAtY timeSpan.label
+       , spanLabel model.colorscheme labelAtX labelAtY life.name
        ]
 
-drawLabeledEvent : Model -> (Int, LabeledEvent) -> List Form
+drawLabeledEvent : Model -> (Int, Event) -> List Form
 drawLabeledEvent model (index, levent) =
-    let xpos = placeYear model levent.when.year
+    let xposL = placeYear model levent.when.from.year
+        xposR = placeYear model levent.when.to.year
+        xposMiddle = (xposL + xposR) / 2.0
         (vSign, layer) = vSignAndLayer index
         height = layerHeight model vSign layer
         labelAtY = labelHeight model vSign height
-        label = eventLabel model.colorscheme xpos labelAtY levent.label
+        label = eventLabel model.colorscheme xposMiddle labelAtY levent.description
         labelUnderline =
-            eventUnderline model.colorscheme (xpos - 50.0, height) (xpos + 50.0, height)
-        dateMarker =
-            eventSegment model.colorscheme (xpos, height) (xpos, 0.0)
-    in [label, labelUnderline, dateMarker]
+            eventUnderline model.colorscheme (xposMiddle - 50.0, height) (xposMiddle + 50.0, height)
+        dateMarkerL = eventSegment model.colorscheme (xposL, height) (xposL, 0.0)
+        dateMarkerR = eventSegment model.colorscheme (xposR, height) (xposR, 0.0)
+    in [label, labelUnderline, dateMarkerL, dateMarkerR]
 
-isTimeSpanOnScreen : Model -> (Int, TimeSpan) -> Bool
-isTimeSpanOnScreen model (_, x) =
+isOnScreen : Model -> TimeSpan -> Bool
+isOnScreen model x =
     x.from.year < maxYear model && x.to.year > minYear model
-
-isEventOnScreen : Model -> (Int, LabeledEvent) -> Bool
-isEventOnScreen model (_, x) =
-    x.when.year < maxYear model && x.when.year > minYear model
 
 drawTimeline : Model -> List Form
 drawTimeline model =
-  let timeSpanLayers = List.filter (isTimeSpanOnScreen model) model.timeline.timeSpans
-      eventLayers = List.filter (isEventOnScreen model) model.timeline.events
+  let timeSpanLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.lives
+      eventLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.events
   in (List.concatMap (drawTimeSpan model) timeSpanLayers)
       ++ (List.concatMap (drawLabeledEvent model) eventLayers)
 
