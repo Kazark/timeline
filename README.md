@@ -8,6 +8,9 @@ Move left with <kbd>H</kbd> or <kbd>LEFT ARROW</kbd>, and right with
 <kbd>L</kbd> or <kbd>RIGHT ARROW</kbd>. To move faster, hold down the shift key
 as well.
 
+To move all the way left to be beginning of the timeline, press <kbd>0</kbd> or
+<kbd>^</kbd>. To move all the way right to the present day, press <kbd>$</kbd>.
+
 ## Development
 
 Restore Node dependencies (Elm will restore its own when you kick off the
