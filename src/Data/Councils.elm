@@ -29,6 +29,8 @@ councils =
   , event (span (duringYear 1512) (duringYear 1517)) "Council of Lateran (V)"
   , event (occurred <| duringYear  1521            ) "Diet of Worms"
   , event (span (duringYear 1545) (duringYear 1563)) "Council of Trent"
+  , event (span (duringYear 1552) (duringYear 1553)) "42 Articles"
+  , event (span (duringYear 1562) (duringYear 1563)) "39 Articles"
   , event (occurred <| duringYear  1619            ) "Synod of Dort"
   , event (span (duringYear 1643) (duringYear 1653)) "Westminster Assembly"
   , event (span (on 1869 Dec 8  ) (on 1870 Oct 20 )) "Vatican Council (I)"
