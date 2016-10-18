@@ -6,6 +6,10 @@ import History exposing (..)
 people : List Life
 people =
   [ life (duringYear  6          ) (duringYear  100        ) "John the Apostle"
+  -- We don't have good data on some of these early guys. Not knowing when
+  -- Clement was born, but having the sense that he was old when he died, I
+  -- have applied Moses' saying that some life's years are seventy
+  , life (duringYear  29         ) (duringYear   99        ) "Clement"
   , life (duringYear  35         ) (duringYear  108        ) "Ignatius of Antioch"
   , life (duringYear  69         ) (duringYear  155        ) "Polycarp"
   , life (duringYear  100        ) (duringYear  165        ) "Justin Martyr"
@@ -28,6 +32,7 @@ people =
   , life (duringYear  349        ) (duringYear  407        ) "John Chrysostom"
   , life (on          354 Nov 13 ) (on          430 Aug 28 ) "Augustine of Hippo"
   , life (duringYear  360        ) (duringYear  418        ) "Pelagius"
+  , life (duringYear  360        ) (duringYear  435        ) "John Cassian"
   , life (duringYear  390        ) (duringYear  455        ) "Prosper of Aquitaine"
   -- Date of death for Fulgentius given as 527 or 533. I averaged it to 530.
   , life (duringYear  462        ) (on          530 Jan 1  ) "Fulgentius of Ruspe"
