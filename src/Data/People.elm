@@ -12,7 +12,12 @@ people =
   , life (duringYear  29         ) (duringYear   99        ) "Clement"
   , life (duringYear  35         ) (duringYear  108        ) "Ignatius of Antioch"
   , life (duringYear  69         ) (duringYear  155        ) "Polycarp"
+  , life (duringYear  70         ) (duringYear  163        ) "Papias"
   , life (duringYear  100        ) (duringYear  165        ) "Justin Martyr"
+  -- The initial date given for Irenaeus is the not the actual date of his
+  -- birth, but a shot into the middle of the vicinity around which the
+  -- speculation of his birth lies.
+  , life (duringYear  128        ) (duringYear  202        ) "Irenaeus"
   , life (duringYear  155        ) (duringYear  240        ) "Tertullian"
   , life (duringYear  184        ) (duringYear  153        ) "Origen"
   , life (duringYear  216        ) (duringYear  274        ) "Mani"
