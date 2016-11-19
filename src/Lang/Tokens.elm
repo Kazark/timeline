@@ -9,5 +9,7 @@ type SelectorToken =
 
 type Combinator =
     New
-    | Union
-    | Difference
+    | Union -- +
+    | Intersection -- *
+    | RelativeCompliment -- -
+    | SymmetricDifference -- \
