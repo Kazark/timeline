@@ -27,7 +27,7 @@ init : Model
 init =
     { timeline = arrange timeline
     , centralYear = 1650
-    , height = 1000
+    , height = 1200
     , width = 800
     , unit = 10.0
     , zoom = Year
