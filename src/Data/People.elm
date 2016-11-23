@@ -38,6 +38,7 @@ people =
   , life (on          354 Nov 13 ) (on          430 Aug 28 ) "Augustine of Hippo"
   , life (duringYear  360        ) (duringYear  418        ) "Pelagius"
   , life (duringYear  360        ) (duringYear  435        ) "John Cassian"
+  , life (duringYear  380        ) (duringYear  456        ) "Eutyches"
   , life (duringYear  390        ) (duringYear  455        ) "Prosper of Aquitaine"
   -- Date of death for Fulgentius given as 527 or 533. I averaged it to 530.
   , life (duringYear  462        ) (on          530 Jan 1  ) "Fulgentius of Ruspe"
@@ -60,6 +61,7 @@ people =
   , life (duringYear  1369       ) (on          1415 Jul 6 ) "Jan Hus"
   , life (duringYear  1380       ) (on          1471 Jul 25) "Thomas a Kempis"
   , life (duringYear  1398       ) (on          1468 Feb 3 ) "Johannes Gutenberg"
+  , life (duringYear  1400       ) (on          1455 Sep 3 ) "Alonso Tostado"
   , life (duringYear  1419       ) (on          1489 Oct 4 ) "Wessel Gansfort"
   , life (on          1466 Oct 28) (on          1536 Jul 12) "Desiderius Erasmus"
   , life (on          1477 Jul 12) (on          1547 Oct 18) "Jacopo Sadoleto"
@@ -87,6 +89,7 @@ people =
   , life (on          1554 Oct 1 ) (on          1623 Jan 15) "Leonardus Lessius"
   , life (duringYear  1558       ) (duringYear  1602       ) "William Perkins"
   , life (on          1560 Oct 10) (on          1609 Oct 19) "Jacobus Arminius"
+  , life (duringYear  1562       ) (on          1621 Dec 4 ) "Andrew Willet"
   , life (on          1563 Jan 30) (on          1641 Jan 11) "Franciscus Gomarus"
   , life (duringYear  1569       ) (duringYear  1614       ) "Robert Parker"
   , life (on          1569 Jul 19) (on          1622 Sep 29) "Conrad Vorstius"
