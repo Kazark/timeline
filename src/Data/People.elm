@@ -215,6 +215,7 @@ people =
   , life (on          1854 Dec 13) (on          1921 Jul 29) "Herman Bavinck"
   , life (on          1862 Mar 14) (on          1949 Aug 13) "Geerhardus Vos"
   , life (on          1873 Oct 14) (on          1957 May 18) "Louis Berkhof"
+  , life (on          1875 Jan 14) (on          1965 Sep 4 ) "Albert Schweitzer"
   , life (on          1914 Jun 11) (on          1995 Dec 17) "Hendrikus Berkhof"
   , life (on          1881 Jul 28) (on          1937 Jan 1 ) "J Gresham Machen"
   , life (on          1886 Apr 1 ) (on          1952 Jul 15) "Arthur Walkington Pink"
