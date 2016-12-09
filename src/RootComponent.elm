@@ -192,10 +192,10 @@ isOnScreen model x =
 
 drawTimeline : Model -> List Form
 drawTimeline model =
-  let timeSpanLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.lives
-      eventLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.events
-  in (List.concatMap (drawTimeSpan model) timeSpanLayers)
-      ++ (List.concatMap (drawLabeledEvent model) eventLayers)
+    let timeSpanLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.lives
+        eventLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.events
+    in (List.concatMap (drawTimeSpan model) timeSpanLayers)
+       ++ (List.concatMap (drawLabeledEvent model) eventLayers)
 
 background : Model -> List Form
 background model =
@@ -205,10 +205,25 @@ background model =
       |> filled model.colorscheme.bg
   ]
 
-view : Model -> Element
-view model =
+maxLayer : List (Int, a) -> Int
+maxLayer = List.map fst >> List.maximum >> Maybe.withDefault 0
+
+computeHeight : Model -> List (Int, Life) -> List (Int, Event) -> Int
+computeHeight model timeSpanLayers eventLayers =
+    [ maxLayer timeSpanLayers, maxLayer eventLayers ]
+    |> List.map ((+) 3 >> layerHeight model 1 >> round)
+    |> List.maximum
+    |> Maybe.withDefault model.height
+
+view_ : Model -> Element
+view_ model =
     [background, drawTimeAxis, drawTimeline]
     |> List.map (\f -> f model)
     |> List.concat
     |> collage model.width model.height
+
+view : Model -> Element
+view model =
+    { model | height = computeHeight model model.timeline.lives model.timeline.events }
+    |> view_
 
