@@ -1,4 +1,4 @@
-module Data.People (people) where
+module Data.People exposing (people)
 
 import Date exposing (..)
 import History exposing (..)

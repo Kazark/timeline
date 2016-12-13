@@ -1,4 +1,4 @@
-module Positioning (ArrangedTimeline, arrange) where
+module Positioning exposing (ArrangedTimeline, arrange)
 
 import History exposing (..)
 

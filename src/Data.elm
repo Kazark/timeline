@@ -1,4 +1,4 @@
-module Data (timeline) where
+module Data exposing (timeline)
 
 import History exposing (Timeline)
 import Data.Events exposing (events)

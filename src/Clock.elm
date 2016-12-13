@@ -1,4 +1,4 @@
-module Clock (currentDate) where
+module Clock exposing (currentDate)
 
 import Date exposing (Date, fromTime)
 import Native.Clock

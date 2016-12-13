@@ -1,4 +1,4 @@
-module Zoom (..) where
+module Zoom exposing (..)
 
 type ZoomLevel
   = Month

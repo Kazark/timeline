@@ -1,4 +1,4 @@
-module Colorscheme (..) where
+module Colorscheme exposing (..)
 
 import Color exposing (..)
 import Graphics.Collage exposing (..)

@@ -1,4 +1,4 @@
-module Data.Events (events) where
+module Data.Events exposing (events)
 
 import Date exposing (..)
 import History exposing (..)

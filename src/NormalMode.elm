@@ -1,4 +1,4 @@
-module NormalMode (toScroll) where
+module NormalMode exposing (toScroll)
 
 import KeyCodes exposing (..)
 import Char exposing (KeyCode, toCode)

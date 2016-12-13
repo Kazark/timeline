@@ -1,4 +1,4 @@
-module History (..) where
+module History exposing (..)
 
 import Date exposing (..)
 import Clock exposing (currentDate)

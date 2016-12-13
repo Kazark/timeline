@@ -1,4 +1,4 @@
-module RootComponent (update, init, view) where
+module RootComponent exposing (update, init, view)
 
 import Graphics.Collage exposing (Form, rect, filled, collage)
 import Graphics.Element exposing (Element, widthOf, leftAligned)

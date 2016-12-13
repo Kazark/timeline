@@ -1,4 +1,4 @@
-module Util (..) where
+module Util exposing (..)
 
 range : Int -> Int -> List Int
 range from to =

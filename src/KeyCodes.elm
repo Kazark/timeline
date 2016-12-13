@@ -1,4 +1,4 @@
-module KeyCodes (..) where
+module KeyCodes exposing (..)
 
 import Char exposing (KeyCode)
 
