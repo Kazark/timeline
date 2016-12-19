@@ -15,5 +15,6 @@ events =
   , event (occurred <| on          1689 May 24     ) "Act of Toleration"
   , event (occurred <| duringYear  1834            ) "Auchterarder case"
   , event (occurred <| on          1843 May 18     ) "Disruption of 1843"
+  , event (occurred <| duringYear  1854            ) "Immaculate Conception of Mary"
   , event (occurred <| duringYear  1887            ) "Downgrade controversy"
   ]

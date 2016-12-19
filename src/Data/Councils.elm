@@ -33,6 +33,6 @@ councils =
   , event (span (duringYear 1562) (duringYear 1563)) "39 Articles"
   , event (occurred <| duringYear  1619            ) "Synod of Dort"
   , event (span (duringYear 1643) (duringYear 1653)) "Westminster Assembly"
-  , event (span (on 1869 Dec 8  ) (on 1870 Oct 20 )) "Vatican Council (I)"
+  , event (span (on 1869 Dec 8  ) (on 1870 Oct 20 )) "Vatican Council (I)" -- Papal infallibility
   , event (span (on 1962 Oct 11 ) (on 1965 Dec 8  )) "Vatican Council (II)"
   ]
