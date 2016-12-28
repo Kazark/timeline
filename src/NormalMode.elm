@@ -3,6 +3,7 @@ module NormalMode (toScroll) where
 import KeyCodes exposing (..)
 import Char exposing (KeyCode, toCode)
 import Set exposing (..)
+import Positioning exposing (ArrangedTimeline)
 
 left : Set KeyCode -> Int
 left keyCodes =
@@ -26,3 +27,7 @@ toScroll keyCodes =
     * if member shift keyCodes
       then 10
       else 1
+
+rebuildQuery : (ArrangedTimeline -> ArrangedTimeline) -> Set KeyCode -> (ArrangedTimeline -> ArrangedTimeline)
+rebuildQuery oldQry keycodes = oldQry
+

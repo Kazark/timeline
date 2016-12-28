@@ -5,7 +5,7 @@ import Graphics.Element exposing (Element, widthOf, leftAligned)
 import History exposing (current, Life, Event, TimeSpan)
 import Data exposing (timeline)
 import Positioning exposing (ArrangedTimeline, arrange)
-import NormalMode exposing (toScroll)
+import NormalMode exposing (toScroll, rebuildQuery)
 import Set exposing (Set)
 import Char exposing (KeyCode)
 import Colorscheme exposing (..)
@@ -85,6 +85,7 @@ update ( ( w, h ), keysDown ) model =
         | width = w
         , height = h
         , centralYear = model.centralYear + (toScroll keysDown) * model.scrollFactor
+        , query = rebuildQuery model.query keysDown
       }
   in
     if maxYear newModel > current.year then
