@@ -1,7 +1,7 @@
 module Colorscheme exposing (..)
 
 import Color exposing (..)
-import Graphics.Collage exposing (..)
+import Collage exposing (..)
 import Text exposing (..)
 
 type alias Colorscheme =

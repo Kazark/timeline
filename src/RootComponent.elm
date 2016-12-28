@@ -1,7 +1,7 @@
 module RootComponent exposing (update, init, view)
 
-import Graphics.Collage exposing (Form, rect, filled, collage)
-import Graphics.Element exposing (Element, widthOf, leftAligned)
+import Collage exposing (Form, rect, filled, collage)
+import Element exposing (Element, widthOf, leftAligned)
 import History exposing (current, Life, Event, TimeSpan)
 import Data exposing (timeline)
 import Positioning exposing (ArrangedTimeline, arrange)

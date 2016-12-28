@@ -2,7 +2,7 @@ module Main exposing (main)
 
 import RootComponent
 import Window
-import Graphics.Element exposing (Element)
+import Element exposing (Element)
 import Keyboard
 
 
