@@ -1,5 +1,6 @@
 module History (..) where
 
+import Tags exposing (Tag)
 import Date exposing (..)
 import Clock exposing (currentDate)
 
@@ -38,10 +39,11 @@ span ymd1 ymd2 = { from = ymd1, to = ymd2 }
 type alias Life =
     { when : TimeSpan
     , name : String
+    , tags : List Tag
     }
 
-life : Ymd -> Ymd -> String -> Life
-life e1 e2 n = { when = { from = e1, to = e2 }, name = n }
+life : Ymd -> Ymd -> String -> List Tag -> Life
+life e1 e2 n ts = { when = { from = e1, to = e2 }, name = n, tags = ts }
 
 type alias Event =
     { when : TimeSpan
