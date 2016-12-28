@@ -9,6 +9,7 @@ import NormalMode exposing (toScroll)
 import Set exposing (Set)
 import Char exposing (KeyCode)
 import Colorscheme exposing (..)
+import Tags exposing (Tag)
 import Zoom exposing (..)
 import Util exposing (range, (|>>))
 
@@ -21,6 +22,7 @@ type alias Model =
     , zoom : ZoomLevel
     , scrollFactor : Int
     , colorscheme : Colorscheme
+    , query : ArrangedTimeline -> ArrangedTimeline
     }
 
 init : Model
@@ -33,6 +35,7 @@ init =
     , zoom = Year
     , scrollFactor = 10
     , colorscheme = dark
+    , query = \x -> x
     }
 
 pixelsToTimeUnits : Model -> Float -> Float
