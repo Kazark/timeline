@@ -5,12 +5,13 @@ import RootComponent
 import Window
 import Element exposing (Element)
 import Keyboard
+import Time exposing (Time)
 
 
-main : Program Never
+main : Program Time
 main =
-    Html.program
-        { init = (RootComponent.init, Cmd.none)
+    Html.programWithFlags
+        { init = RootComponent.init
         , view = RootComponent.view
         , update = RootComponent.update
         , subscriptions = RootComponent.handleSubscriptions

@@ -1,7 +1,6 @@
 module History exposing (..)
 
 import Date exposing (..)
-import Clock exposing (currentDate)
 
 type alias Ymd =
     { year : Int
@@ -26,8 +25,6 @@ on y m d = { year = y, month = Just m, day = Just d }
 fromDate : Date -> Ymd
 fromDate date =
     { year = year date, month = Just <| month date, day = Just <| day date }
-
-current = currentDate () |> fromDate
 
 occurred : Ymd -> TimeSpan
 occurred ymd = { from = ymd, to = ymd }

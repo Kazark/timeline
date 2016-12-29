@@ -2,7 +2,7 @@ module RootComponent exposing (update, init, view, Msg, handleSubscriptions)
 
 import Collage exposing (Form, rect, filled, collage)
 import Element exposing (Element, widthOf, leftAligned)
-import History exposing (current, Life, Event, TimeSpan)
+import History exposing (Life, Event, TimeSpan, Ymd, fromDate)
 import Data exposing (timeline)
 import Positioning exposing (ArrangedTimeline, arrange)
 import NormalMode exposing (toScroll)
@@ -14,6 +14,8 @@ import Util exposing (range, (|>>))
 import Keyboard
 import Window
 import Html
+import Date
+import Time exposing (Time)
 
 type alias Model =
     { timeline : ArrangedTimeline
@@ -24,19 +26,24 @@ type alias Model =
     , zoom : ZoomLevel
     , scrollFactor : Int
     , colorscheme : Colorscheme
+    , current : Ymd
     }
 
-init : Model
-init =
-    { timeline = arrange timeline
-    , centralYear = 1650
-    , height = 1200
-    , width = 800
-    , unit = 10.0
-    , zoom = Year
-    , scrollFactor = 10
-    , colorscheme = dark
-    }
+init : Time -> (Model, Cmd a)
+init now =
+    let current = fromDate <| Date.fromTime now
+    in (
+        { timeline = arrange <| timeline current
+        , centralYear = 1650
+        , height = 1200
+        , width = 800
+        , unit = 10.0
+        , zoom = Year
+        , scrollFactor = 10
+        , colorscheme = dark
+        , current = current
+        }
+     , Cmd.none)
 
 pixelsToTimeUnits : Model -> Float -> Float
 pixelsToTimeUnits model pixels = pixels / model.unit
@@ -97,8 +104,8 @@ update msg model =
           KeyPressed keyDown ->
               { model | centralYear = model.centralYear + (toScroll keyDown) * model.scrollFactor }
   in (
-    if maxYear newModel > current.year then
-      { newModel | centralYear = current.year - halfAxisInTimeUnits model }
+    if maxYear newModel > model.current.year then
+      { newModel | centralYear = model.current.year - halfAxisInTimeUnits model }
     else if minYear newModel < model.scrollFactor then
       { newModel | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
     else
