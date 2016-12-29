@@ -1,7 +1,7 @@
 module Positioning exposing (ArrangedTimeline, arrange)
 
 import History exposing (..)
-
+import Tuple
 
 type alias ArrangedTimeline =
     { lives : List ( Int, Life )

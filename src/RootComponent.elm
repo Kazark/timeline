@@ -1,4 +1,4 @@
-module RootComponent exposing (update, init, view, Msg, handleSubscriptions)
+module RootComponent exposing (Model, Msg, update, init, view, handleSubscriptions)
 
 import Collage exposing (Form, rect, filled, collage)
 import Element exposing (Element, widthOf, leftAligned)

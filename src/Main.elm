@@ -8,7 +8,7 @@ import Keyboard
 import Time exposing (Time)
 
 
-main : Program Time RootComponent.Model RootComponent.Ms
+main : Program Time RootComponent.Model RootComponent.Msg
 main =
     Html.programWithFlags
         { init = RootComponent.init
