@@ -16,7 +16,7 @@ import Window
 import Html
 import Date
 import Time exposing (Time)
-
+import Task
 
 type alias Model =
     { timeline : ArrangedTimeline
@@ -31,7 +31,11 @@ type alias Model =
     }
 
 
-init : Time -> ( Model, Cmd a )
+type Msg
+    = WindowResized Window.Size
+    | KeyPressed KeyCode
+
+init : Time -> ( Model, Cmd Msg )
 init now =
     let
         current =
@@ -40,14 +44,14 @@ init now =
         ( { timeline = arrange <| timeline current
           , centralYear = 1650
           , height = 1200
-          , width = 800
+          , width = 0
           , unit = 10.0
           , zoom = Year
           , scrollFactor = 10
           , colorscheme = dark
           , current = current
           }
-        , Cmd.none
+        , Task.perform WindowResized Window.size
         )
 
 
@@ -102,10 +106,6 @@ updateCentralYear : Model -> KeyCode -> Int
 updateCentralYear model keyDown =
     model.centralYear + (toScroll keyDown) * model.scrollFactor
 
-
-type Msg
-    = WindowResized Window.Size
-    | KeyPressed KeyCode
 
 
 handleSubscriptions : Model -> Sub Msg
