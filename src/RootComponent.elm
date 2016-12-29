@@ -17,6 +17,7 @@ import Html
 import Date
 import Time exposing (Time)
 
+
 type alias Model =
     { timeline : ArrangedTimeline
     , centralYear : Int
@@ -29,64 +30,83 @@ type alias Model =
     , current : Ymd
     }
 
-init : Time -> (Model, Cmd a)
+
+init : Time -> ( Model, Cmd a )
 init now =
-    let current = fromDate <| Date.fromTime now
-    in (
-        { timeline = arrange <| timeline current
-        , centralYear = 1650
-        , height = 1200
-        , width = 800
-        , unit = 10.0
-        , zoom = Year
-        , scrollFactor = 10
-        , colorscheme = dark
-        , current = current
-        }
-     , Cmd.none)
+    let
+        current =
+            fromDate <| Date.fromTime now
+    in
+        ( { timeline = arrange <| timeline current
+          , centralYear = 1650
+          , height = 1200
+          , width = 800
+          , unit = 10.0
+          , zoom = Year
+          , scrollFactor = 10
+          , colorscheme = dark
+          , current = current
+          }
+        , Cmd.none
+        )
+
 
 pixelsToTimeUnits : Model -> Float -> Float
-pixelsToTimeUnits model pixels = pixels / model.unit
+pixelsToTimeUnits model pixels =
+    pixels / model.unit
+
 
 halfScreenInPixels : Model -> Float
-halfScreenInPixels model = (toFloat model.width) / 2.0
+halfScreenInPixels model =
+    (toFloat model.width) / 2.0
+
 
 halfScreenInTimeUnits : Model -> Float
-halfScreenInTimeUnits = halfScreenInPixels |>> pixelsToTimeUnits 
+halfScreenInTimeUnits =
+    halfScreenInPixels |>> pixelsToTimeUnits
+
 
 halfAxisInUppedTimeUnits : Model -> Int
 halfAxisInUppedTimeUnits model =
     -- The -2 is because we don't want to draw too close to the edge when
     -- floor doesn't change the number much
-    halfScreenInTimeUnits model - 2
-    |> convertUp model.zoom
-    |> floor
+    halfScreenInTimeUnits model
+        - 2
+        |> convertUp model.zoom
+        |> floor
+
 
 downTimeUnits : Model -> Int -> Float
 downTimeUnits model =
-  toFloat >> convertDown (zoomOut model.zoom)
+    toFloat >> convertDown (zoomOut model.zoom)
+
 
 halfAxisInTimeUnits : Model -> Int
 halfAxisInTimeUnits model =
     halfAxisInUppedTimeUnits model
-    |> downTimeUnits model
-    |> round
+        |> downTimeUnits model
+        |> round
+
 
 minYear : Model -> Int
 minYear model =
-  model.centralYear - halfAxisInTimeUnits model
+    model.centralYear - halfAxisInTimeUnits model
+
 
 maxYear : Model -> Int
 maxYear model =
-  model.centralYear + halfAxisInTimeUnits model
+    model.centralYear + halfAxisInTimeUnits model
+
 
 updateCentralYear : Model -> KeyCode -> Int
 updateCentralYear model keyDown =
-  model.centralYear + (toScroll keyDown) * model.scrollFactor
+    model.centralYear + (toScroll keyDown) * model.scrollFactor
+
 
 type Msg
     = WindowResized Window.Size
     | KeyPressed KeyCode
+
 
 handleSubscriptions : Model -> Sub Msg
 handleSubscriptions _ =
@@ -95,157 +115,244 @@ handleSubscriptions _ =
         , Window.resizes WindowResized
         ]
 
-update : Msg -> Model -> (Model, Cmd a)
+
+update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
-  let newModel =
-      case msg of
-          WindowResized size ->
-              { model | width = size.width , height = size.height }
-          KeyPressed keyDown ->
-              { model | centralYear = model.centralYear + (toScroll keyDown) * model.scrollFactor }
-  in (
-    if maxYear newModel > model.current.year then
-      { newModel | centralYear = model.current.year - halfAxisInTimeUnits model }
-    else if minYear newModel < model.scrollFactor then
-      { newModel | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
-    else
-      newModel
-    , Cmd.none)
+    let
+        newModel =
+            case msg of
+                WindowResized size ->
+                    { model | width = size.width, height = size.height }
+
+                KeyPressed keyDown ->
+                    { model | centralYear = model.centralYear + (toScroll keyDown) * model.scrollFactor }
+    in
+        ( if maxYear newModel > model.current.year then
+            { newModel | centralYear = model.current.year - halfAxisInTimeUnits model }
+          else if minYear newModel < model.scrollFactor then
+            { newModel | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
+          else
+            newModel
+        , Cmd.none
+        )
+
 
 tickOffsets : Model -> List ( Int, Float )
 tickOffsets model =
-    halfAxisInUppedTimeUnits model * 2 + 1
-    |> range 0
-    |> List.map
-        (\x ->
-          let
-            y =
-              downTimeUnits model x
-          in
-            ( round y, y * model.unit )
-        )
+    halfAxisInUppedTimeUnits model
+        * 2
+        + 1
+        |> range 0
+        |> List.map
+            (\x ->
+                let
+                    y =
+                        downTimeUnits model x
+                in
+                    ( round y, y * model.unit )
+            )
+
 
 drawTick : Model -> Int -> Float -> List Form
 drawTick model year xpos =
-  let vradius = (toFloat model.height) / 2.0
-      h = model.unit * 0.5
-  in
-    [ vLineSegment model.colorscheme ( xpos, vradius ) ( xpos, -vradius )
-    , axisSegment model.colorscheme ( xpos, -h ) ( xpos, h )
-    , yearLabel model.colorscheme xpos year
-    ]
+    let
+        vradius =
+            (toFloat model.height) / 2.0
+
+        h =
+            model.unit * 0.5
+    in
+        [ vLineSegment model.colorscheme ( xpos, vradius ) ( xpos, -vradius )
+        , axisSegment model.colorscheme ( xpos, -h ) ( xpos, h )
+        , yearLabel model.colorscheme xpos year
+        ]
+
 
 drawTicks : Model -> Int -> Float -> List Form
 drawTicks model beginYear beginPos =
-  tickOffsets model
-    |> List.concatMap (\( yearOffset, posOffset ) -> drawTick model (yearOffset + beginYear) (posOffset + beginPos))
+    tickOffsets model
+        |> List.concatMap (\( yearOffset, posOffset ) -> drawTick model (yearOffset + beginYear) (posOffset + beginPos))
+
 
 drawTimeAxis : Model -> List Form
 drawTimeAxis model =
-  let xmax = halfScreenInPixels model
-      minYear' = minYear model
-      minYearPos = (toFloat <| halfAxisInTimeUnits model) * -model.unit
-  in
-    axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
-      :: drawTicks model minYear' minYearPos
+    let
+        xmax =
+            halfScreenInPixels model
+
+        minYear_ =
+            minYear model
+
+        minYearPos =
+            (toFloat <| halfAxisInTimeUnits model) * -model.unit
+    in
+        axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
+            :: drawTicks model minYear_ minYearPos
+
 
 placeYear : Model -> Int -> Float
 placeYear model year =
-  toFloat (year - model.centralYear) * model.unit
+    toFloat (year - model.centralYear) * model.unit
 
-vSignAndLayer : Int -> (Int, Int)
+
+vSignAndLayer : Int -> ( Int, Int )
 vSignAndLayer index =
-    let vSign = if index % 2 == 0
-                then 1
-                else -1
-        layer = vSign * index // 2
-    in (vSign, layer)
+    let
+        vSign =
+            if index % 2 == 0 then
+                1
+            else
+                -1
+
+        layer =
+            vSign * index // 2
+    in
+        ( vSign, layer )
+
 
 layerHeight : Model -> Int -> Int -> Float
 layerHeight model vSign layer =
     (toFloat (layer + vSign) * model.unit * 2.0) - (model.unit * 0.5)
 
+
 labelHeight : Model -> Int -> Float -> Float
 labelHeight model vSign height =
-      if vSign == 1
-      then height + model.unit
-      else height - (0.6 * model.unit)
+    if vSign == 1 then
+        height + model.unit
+    else
+        height - (0.6 * model.unit)
+
 
 drawTimeSpan : Model -> ( Int, Life ) -> List Form
 drawTimeSpan model ( index, life ) =
-    let begin = placeYear model life.when.from.year
-        end = placeYear model life.when.to.year
-        (vSign, layer) = vSignAndLayer index
-        height = layerHeight model vSign layer
-        heightPlus = height + (model.unit * 0.5)
-        heightMinus = height - (model.unit * 0.5)
+    let
+        begin =
+            placeYear model life.when.from.year
+
+        end =
+            placeYear model life.when.to.year
+
+        ( vSign, layer ) =
+            vSignAndLayer index
+
+        height =
+            layerHeight model vSign layer
+
+        heightPlus =
+            height + (model.unit * 0.5)
+
+        heightMinus =
+            height - (model.unit * 0.5)
+
         labelAtX =
             toFloat (life.when.to.year - life.when.from.year) / 2.0 * model.unit + begin
-        labelAtY = labelHeight model vSign height
-    in [ spanSegment model.colorscheme ( begin, height ) ( end, height )
-       , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
-       , spanSegment model.colorscheme ( end, heightPlus ) ( end, heightMinus )
-       , spanLabel model.colorscheme labelAtX labelAtY life.name
-       ]
 
-drawLabeledEvent : Model -> (Int, Event) -> List Form
-drawLabeledEvent model (index, levent) =
-    let xposL = placeYear model levent.when.from.year
-        xposR = placeYear model levent.when.to.year
-        xposMiddle = (xposL + xposR) / 2.0
-        (vSign, layer) = vSignAndLayer index
-        height = layerHeight model vSign layer
-        labelAtY = labelHeight model vSign height
-        label = eventLabel model.colorscheme xposMiddle labelAtY levent.description
-        wing = let diff = xposR - xposL
-               in if diff > 100.0
-                  then 5.0
-                  else (100.0 - diff)/2.0
+        labelAtY =
+            labelHeight model vSign height
+    in
+        [ spanSegment model.colorscheme ( begin, height ) ( end, height )
+        , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
+        , spanSegment model.colorscheme ( end, heightPlus ) ( end, heightMinus )
+        , spanLabel model.colorscheme labelAtX labelAtY life.name
+        ]
+
+
+drawLabeledEvent : Model -> ( Int, Event ) -> List Form
+drawLabeledEvent model ( index, levent ) =
+    let
+        xposL =
+            placeYear model levent.when.from.year
+
+        xposR =
+            placeYear model levent.when.to.year
+
+        xposMiddle =
+            (xposL + xposR) / 2.0
+
+        ( vSign, layer ) =
+            vSignAndLayer index
+
+        height =
+            layerHeight model vSign layer
+
+        labelAtY =
+            labelHeight model vSign height
+
+        label =
+            eventLabel model.colorscheme xposMiddle labelAtY levent.description
+
+        wing =
+            let
+                diff =
+                    xposR - xposL
+            in
+                if diff > 100.0 then
+                    5.0
+                else
+                    (100.0 - diff) / 2.0
+
         labelUnderline =
-            eventUnderline model.colorscheme (xposL - wing, height) (xposR + wing, height)
-        dateMarkerL = eventSegment model.colorscheme (xposL, height) (xposL, 0.0)
-        dateMarkerR = eventSegment model.colorscheme (xposR, height) (xposR, 0.0)
-    in [label, labelUnderline, dateMarkerL, dateMarkerR]
+            eventUnderline model.colorscheme ( xposL - wing, height ) ( xposR + wing, height )
+
+        dateMarkerL =
+            eventSegment model.colorscheme ( xposL, height ) ( xposL, 0.0 )
+
+        dateMarkerR =
+            eventSegment model.colorscheme ( xposR, height ) ( xposR, 0.0 )
+    in
+        [ label, labelUnderline, dateMarkerL, dateMarkerR ]
+
 
 isOnScreen : Model -> TimeSpan -> Bool
 isOnScreen model x =
     x.from.year < maxYear model && x.to.year > minYear model
 
+
 drawTimeline : Model -> List Form
 drawTimeline model =
-    let timeSpanLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.lives
-        eventLayers = List.filter (snd >> .when >> isOnScreen model) model.timeline.events
-    in (List.concatMap (drawTimeSpan model) timeSpanLayers)
-       ++ (List.concatMap (drawLabeledEvent model) eventLayers)
+    let
+        timeSpanLayers =
+            List.filter (Tuple.second >> .when >> isOnScreen model) model.timeline.lives
+
+        eventLayers =
+            List.filter (Tuple.second >> .when >> isOnScreen model) model.timeline.events
+    in
+        (List.concatMap (drawTimeSpan model) timeSpanLayers)
+            ++ (List.concatMap (drawLabeledEvent model) eventLayers)
+
 
 background : Model -> List Form
 background model =
-  [ rect
-      (toFloat model.width)
-      (toFloat model.height)
-      |> filled model.colorscheme.bg
-  ]
+    [ rect
+        (toFloat model.width)
+        (toFloat model.height)
+        |> filled model.colorscheme.bg
+    ]
 
-maxLayer : List (Int, a) -> Int
-maxLayer = List.map fst >> List.maximum >> Maybe.withDefault 0
 
-computeHeight : Model -> List (Int, Life) -> List (Int, Event) -> Int
+maxLayer : List ( Int, a ) -> Int
+maxLayer =
+    List.map Tuple.first >> List.maximum >> Maybe.withDefault 0
+
+
+computeHeight : Model -> List ( Int, Life ) -> List ( Int, Event ) -> Int
 computeHeight model timeSpanLayers eventLayers =
     [ maxLayer timeSpanLayers, maxLayer eventLayers ]
-    |> List.map ((+) 3 >> layerHeight model 1 >> round)
-    |> List.maximum
-    |> Maybe.withDefault model.height
+        |> List.map ((+) 3 >> layerHeight model 1 >> round)
+        |> List.maximum
+        |> Maybe.withDefault model.height
+
 
 view_ : Model -> Element
 view_ model =
-    [background, drawTimeAxis, drawTimeline]
-    |> List.map (\f -> f model)
-    |> List.concat
-    |> collage model.width model.height
+    [ background, drawTimeAxis, drawTimeline ]
+        |> List.map (\f -> f model)
+        |> List.concat
+        |> collage model.width model.height
+
 
 view : Model -> Html.Html a
 view model =
     { model | height = computeHeight model model.timeline.lives model.timeline.events }
-    |> view_
-    |> Element.toHtml
-
+        |> view_
+        |> Element.toHtml
