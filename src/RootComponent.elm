@@ -122,7 +122,7 @@ update msg model =
         newModel =
             case msg of
                 WindowResized size ->
-                    { model | width = size.width, height = size.height }
+                    { model | width = size.width - 30, height = size.height }
 
                 KeyPressed keyDown ->
                     { model | centralYear = model.centralYear + (toScroll keyDown) * model.scrollFactor }
