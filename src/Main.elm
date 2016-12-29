@@ -1,13 +1,17 @@
 module Main exposing (main)
 
+import Html.App as Html
 import RootComponent
 import Window
 import Element exposing (Element)
 import Keyboard
 
 
-main : Signal Element
+main : Program Never
 main =
-  Signal.map2 (\x y -> ( x, y )) Window.dimensions Keyboard.keysDown
-    |> Signal.foldp RootComponent.update RootComponent.init
-    |> Signal.map RootComponent.view
+    Html.program
+        { init = (RootComponent.init, Cmd.none)
+        , view = RootComponent.view
+        , update = RootComponent.update
+        , subscriptions = RootComponent.handleSubscriptions
+        }

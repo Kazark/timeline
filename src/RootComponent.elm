@@ -1,4 +1,4 @@
-module RootComponent exposing (update, init, view)
+module RootComponent exposing (update, init, view, Msg, handleSubscriptions)
 
 import Collage exposing (Form, rect, filled, collage)
 import Element exposing (Element, widthOf, leftAligned)
@@ -11,6 +11,9 @@ import Char exposing (KeyCode)
 import Colorscheme exposing (..)
 import Zoom exposing (..)
 import Util exposing (range, (|>>))
+import Keyboard
+import Window
+import Html
 
 type alias Model =
     { timeline : ArrangedTimeline
@@ -70,26 +73,37 @@ maxYear : Model -> Int
 maxYear model =
   model.centralYear + halfAxisInTimeUnits model
 
-updateCentralYear : Model -> Set KeyCode -> Int
-updateCentralYear model keysDown =
-  model.centralYear + (toScroll keysDown) * model.scrollFactor
+updateCentralYear : Model -> KeyCode -> Int
+updateCentralYear model keyDown =
+  model.centralYear + (toScroll keyDown) * model.scrollFactor
 
-update : ( ( Int, Int ), Set KeyCode ) -> Model -> Model
-update ( ( w, h ), keysDown ) model =
-  let
-    newModel =
-      { model
-        | width = w
-        , height = h
-        , centralYear = model.centralYear + (toScroll keysDown) * model.scrollFactor
-      }
-  in
+type Msg
+    = WindowResized Window.Size
+    | KeyPressed KeyCode
+
+handleSubscriptions : Model -> Sub Msg
+handleSubscriptions _ =
+    Sub.batch
+        [ Keyboard.downs KeyPressed
+        , Window.resizes WindowResized
+        ]
+
+update : Msg -> Model -> (Model, Cmd a)
+update msg model =
+  let newModel =
+      case msg of
+          WindowResized size ->
+              { model | width = size.width , height = size.height }
+          KeyPressed keyDown ->
+              { model | centralYear = model.centralYear + (toScroll keyDown) * model.scrollFactor }
+  in (
     if maxYear newModel > current.year then
       { newModel | centralYear = current.year - halfAxisInTimeUnits model }
     else if minYear newModel < model.scrollFactor then
       { newModel | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
     else
       newModel
+    , Cmd.none)
 
 tickOffsets : Model -> List ( Int, Float )
 tickOffsets model =
@@ -222,8 +236,9 @@ view_ model =
     |> List.concat
     |> collage model.width model.height
 
-view : Model -> Element
+view : Model -> Html.Html a
 view model =
     { model | height = computeHeight model model.timeline.lives model.timeline.events }
     |> view_
+    |> Element.toHtml
 

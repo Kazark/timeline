@@ -4,25 +4,26 @@ import KeyCodes exposing (..)
 import Char exposing (KeyCode, toCode)
 import Set exposing (..)
 
-left : Set KeyCode -> Int
-left keyCodes =
-  if member leftArrow keyCodes || member h keyCodes
+left : KeyCode -> Int
+left keyCode =
+  if leftArrow == keyCode || h == keyCode
   then -1
-  else if member zero keyCodes || (member six keyCodes && member shift keyCodes)
+  else if Char.fromCode keyCode == 'H'
+  then -10
+  else if zero == keyCode || Char.fromCode keyCode == '^'
   then -1000000000 -- move to beginning
   else 0
 
-right : Set KeyCode -> Int
-right keyCodes =
-  if member rightArrow keyCodes || member l keyCodes
+right : KeyCode -> Int
+right keyCode =
+  if rightArrow == keyCode || l == keyCode
   then 1
-  else if member four keyCodes && member shift keyCodes
+  else if Char.fromCode keyCode == 'L'
+  then 10
+  else if Char.fromCode keyCode == '$'
   then 1000000000 -- move to end
   else 0
 
-toScroll : Set KeyCode -> Int
-toScroll keyCodes =
-  (left keyCodes + right keyCodes)
-    * if member shift keyCodes
-      then 10
-      else 1
+toScroll : KeyCode -> Int
+toScroll keyCode =
+  left keyCode + right keyCode
