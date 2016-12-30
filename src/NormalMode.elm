@@ -34,3 +34,14 @@ right keyCode =
 toScroll : KeyCode -> Int
 toScroll keyCode =
     left keyCode + right keyCode
+
+{-
+type Msg
+    = KeyDown KeyCode
+    | KeyUp KeyCode
+    
+type alias Model =
+    {
+        isShiftDown : Bool
+    }
+-}
