@@ -1,17 +1,14 @@
-module Timeline exposing (Model, Msg, update, init, view, subscriptions)
+module Timeline exposing (Model, Msg, requestMove, update, init, view, subscriptions)
 
 import Collage exposing (Form, rect, filled, collage)
 import Element exposing (Element, widthOf, leftAligned)
 import History exposing (Life, Event, TimeSpan, Ymd, fromDate)
 import Data exposing (timeline)
 import Positioning exposing (ArrangedTimeline, arrange)
-import NormalMode exposing (toScroll)
-import Set exposing (Set)
-import Char exposing (KeyCode)
+import MoveCmds exposing (..)
 import Colorscheme exposing (..)
 import Zoom exposing (..)
 import Util exposing (range, (|>>))
-import Keyboard
 import Window
 import Task
 
@@ -27,12 +24,14 @@ type alias Model =
     , current : Ymd
     }
 
-
 type Msg
     = WindowResized Window.Size
-    | KeyPressed KeyCode
+    | MovementRequested MoveCmd
 
-init : Ymd -> ( Model, (Msg -> a) -> Cmd a )
+requestMove : MoveCmd -> Msg
+requestMove = MovementRequested
+
+init : Ymd -> (Model, Cmd Msg)
 init current =
     ( { timeline = arrange <| timeline current
       , centralYear = 1650
@@ -44,7 +43,7 @@ init current =
       , colorscheme = dark
       , current = current
       }
-    , \f -> Task.perform (f << WindowResized) Window.size
+    , Task.perform WindowResized Window.size
     )
 
 
@@ -84,49 +83,48 @@ halfAxisInTimeUnits model =
         |> downTimeUnits model
         |> round
 
-
 minYear : Model -> Int
 minYear model =
     model.centralYear - halfAxisInTimeUnits model
-
 
 maxYear : Model -> Int
 maxYear model =
     model.centralYear + halfAxisInTimeUnits model
 
+updateCentralYear : MoveCmd -> Model -> Model
+updateCentralYear (Scroll distance direction) model =
+    let sign = case direction of
+                   Left -> -1
+                   Right -> 1
+        magnitude =
+            case distance of
+                Near -> 1
+                Far -> 10
+                Farthest -> 1000000 --end
+        centralYear = model.centralYear + (magnitude * model.scrollFactor * sign)
+    in { model | centralYear = centralYear }
 
-updateCentralYear : Model -> KeyCode -> Int
-updateCentralYear model keyDown =
-    model.centralYear + (toScroll keyDown) * model.scrollFactor
+subscriptions : Model -> Sub Msg
+subscriptions _ = Window.resizes WindowResized
 
+resizeWindow : Window.Size -> Model -> Model
+resizeWindow size model = { model | width = size.width - 30, height = size.height }
 
-
-subscriptions : (Msg -> a) -> Sub a
-subscriptions f =
-    Sub.batch
-        [ Keyboard.downs (f << KeyPressed)
-        , Window.resizes (f << WindowResized)
-        ]
+adjustForOverscroll : Model -> Model
+adjustForOverscroll model =
+  if maxYear model > model.current.year then
+    { model | centralYear = model.current.year - halfAxisInTimeUnits model }
+  else if minYear model < model.scrollFactor then
+    { model | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
+  else model
 
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
-    let
-        newModel =
-            case msg of
-                WindowResized size ->
-                    { model | width = size.width - 30, height = size.height }
-
-                KeyPressed keyDown ->
-                    { model | centralYear = model.centralYear + (toScroll keyDown) * model.scrollFactor }
-    in
-        ( if maxYear newModel > model.current.year then
-            { newModel | centralYear = model.current.year - halfAxisInTimeUnits model }
-          else if minYear newModel < model.scrollFactor then
-            { newModel | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
-          else
-            newModel
-        , Cmd.none
-        )
+    let updater =
+        case msg of
+             WindowResized size -> resizeWindow size
+             MovementRequested moveCmd -> updateCentralYear moveCmd
+    in (adjustForOverscroll <| updater model, Cmd.none)
 
 
 tickOffsets : Model -> List ( Int, Float )

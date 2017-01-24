@@ -14,5 +14,5 @@ main =
         { init = RootComponent.init
         , view = RootComponent.view
         , update = RootComponent.update
-        , subscriptions = RootComponent.handleSubscriptions
+        , subscriptions = RootComponent.subscriptions
         }
