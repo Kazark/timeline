@@ -51,11 +51,12 @@ life e1 e2 n ts =
 type alias Event =
     { when : TimeSpan
     , description : String
+    , tags : List Tag
     }
 
-event : TimeSpan -> String -> Event
-event ts desc =
-    { when = ts, description = desc }
+event : TimeSpan -> String -> List Tag -> Event
+event ts desc tags =
+    { when = ts, description = desc, tags = tags }
 
 type alias Timeline =
     { lives : List Life

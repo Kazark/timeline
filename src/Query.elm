@@ -8,4 +8,6 @@ type Query
 
 runQuery : Query -> ArrangedTimeline -> ArrangedTimeline
 runQuery (HasTag tag) timeline =
-    { timeline | lives = List.filter (Tuple.second >> .tags >> (List.member tag)) timeline.lives }
+    { events = List.filter (Tuple.second >> .tags >> (List.member tag)) timeline.events
+    , lives = List.filter (Tuple.second >> .tags >> (List.member tag)) timeline.lives
+    }
