@@ -1,4 +1,4 @@
-module Tags (..) where
+module Tags exposing (..)
 
 type Tag =
     England

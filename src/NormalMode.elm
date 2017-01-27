@@ -1,32 +1,54 @@
-module NormalMode (toScroll) where
+module NormalMode exposing (Msg, Model, init, update, subscriptions, rebuildQuery)
 
 import KeyCodes exposing (..)
 import Char exposing (KeyCode, toCode)
 import Set exposing (..)
 import Positioning exposing (ArrangedTimeline)
+import Keyboard
+import MoveCmds exposing (..)
 
-left : Set KeyCode -> Int
-left keyCodes =
-  if member leftArrow keyCodes || member h keyCodes
-  then -1
-  else if member zero keyCodes || (member six keyCodes && member shift keyCodes)
-  then -1000000000 -- move to beginning
-  else 0
+parseKeys : KeyCode -> Bool -> Maybe MoveCmd
+parseKeys keyCode isShiftDown =
+    if leftArrow == keyCode || h == keyCode
+    then Just <| Scroll (if isShiftDown then Far else Near) Left
+    else if zero == keyCode || (keyCode == six && isShiftDown)
+    then Just <| Scroll Farthest Left
+    else if rightArrow == keyCode || l == keyCode
+    then Just <| Scroll (if isShiftDown then Far else Near) Right
+    else if keyCode == four && isShiftDown
+    then Just <| Scroll Farthest Right
+    else Nothing
 
-right : Set KeyCode -> Int
-right keyCodes =
-  if member rightArrow keyCodes || member l keyCodes
-  then 1
-  else if member four keyCodes && member shift keyCodes
-  then 1000000000 -- move to end
-  else 0
+type Msg
+    = KeyDown KeyCode
+    | KeyUp KeyCode
+    
+type alias Model =
+    {
+        isShiftDown : Bool
+    }
 
-toScroll : Set KeyCode -> Int
-toScroll keyCodes =
-  (left keyCodes + right keyCodes)
-    * if member shift keyCodes
-      then 10
-      else 1
+init : Model
+init = { isShiftDown = False }
+
+update : Msg -> Model -> (Model, Maybe MoveCmd)
+update msg model =
+    case msg of
+        KeyDown key ->
+            if key == shift
+            then ({ isShiftDown = True }, Nothing)
+            else (model, parseKeys key model.isShiftDown)
+        KeyUp key ->
+            if key == shift
+            then ({ isShiftDown = False }, Nothing)
+            else (model, Nothing)
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.batch
+        [ Keyboard.downs KeyDown
+        , Keyboard.ups KeyUp
+        ]
 
 rebuildQuery : (ArrangedTimeline -> ArrangedTimeline) -> Set KeyCode -> (ArrangedTimeline -> ArrangedTimeline)
 rebuildQuery oldQry keycodes = oldQry

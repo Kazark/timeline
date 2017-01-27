@@ -1,11 +1,11 @@
-module Data.People (people) where
+module Data.People exposing (people)
 
 import Date exposing (..)
 import History exposing (..)
 import Tags exposing (..)
 
-people : List Life
-people =
+people : Ymd -> List Life
+people current =
   [ life (duringYear  6          ) (duringYear  100        ) "John the Apostle" []
   -- We don't have good data on some of these early guys. Not knowing when
   -- Clement was born, but having the sense that he was old when he died, I

@@ -1,4 +1,4 @@
-module Data.Councils (councils) where
+module Data.Councils exposing (councils)
 
 import Date exposing (..)
 import History exposing (..)

@@ -1,13 +1,18 @@
-module Main (main) where
+module Main exposing (main)
 
+import Html
 import RootComponent
 import Window
-import Graphics.Element exposing (Element)
+import Element exposing (Element)
 import Keyboard
+import Time exposing (Time)
 
 
-main : Signal Element
+main : Program Time RootComponent.Model RootComponent.Msg
 main =
-  Signal.map2 (\x y -> ( x, y )) Window.dimensions Keyboard.keysDown
-    |> Signal.foldp RootComponent.update RootComponent.init
-    |> Signal.map RootComponent.view
+    Html.programWithFlags
+        { init = RootComponent.init
+        , view = RootComponent.view
+        , update = RootComponent.update
+        , subscriptions = RootComponent.subscriptions
+        }
