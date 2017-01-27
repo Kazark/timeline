@@ -3,6 +3,11 @@ module Data.Events exposing (events)
 import Date exposing (..)
 import History exposing (..)
 
+-- Events to add:
+--
+-- http://www.alliancenet.org/cambridge-declaration
+--
+
 events : List Event
 events =
   [ event (occurred <| duringMonth 313 Feb         ) "Edict of Milan"

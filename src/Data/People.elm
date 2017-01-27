@@ -3,6 +3,25 @@ module Data.People exposing (people)
 import Date exposing (..)
 import History exposing (..)
 
+-- People to research and add:
+--
+-- https://en.wikipedia.org/wiki/Gregory_of_Rimini
+-- https://en.wikipedia.org/wiki/Thomas_Halyburton
+-- https://en.m.wikipedia.org/wiki/Gottschalk_of_Orbais
+-- https://en.m.wikipedia.org/wiki/Benedictus_Aretius
+-- https://en.m.wikipedia.org/wiki/Isidore_of_Seville
+-- https://en.m.wikipedia.org/wiki/Maximus_the_Confessor
+-- https://en.m.wikipedia.org/wiki/Theognostus_of_Alexandria
+-- https://en.m.wikipedia.org/wiki/Leontius_of_Jerusalem
+-- https://en.m.wikipedia.org/wiki/Pope_Dionysius_of_Alexandria
+-- http://cyclopedia.lcms.org/display.asp?t1=s&word=SOHNIUS.GEORG
+-- https://en.m.wikipedia.org/wiki/Lambert_Daneau
+-- https://en.m.wikipedia.org/wiki/Keckermann
+-- https://en.m.wikipedia.org/wiki/Salomon_van_Til
+-- https://en.m.wikipedia.org/wiki/William_Greenough_Thayer_Shedd
+-- https://en.m.wikipedia.org/wiki/Cyprian
+--
+
 people : Ymd -> List Life
 people current =
   [ life (duringYear  6          ) (duringYear  100        ) "John the Apostle"
