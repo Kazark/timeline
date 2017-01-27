@@ -109,6 +109,10 @@ applyQuery : Query -> Model -> Model
 applyQuery query model =
     { model | timeline = rearrange <| runQuery query model.timeline }
 
+clearQuery : Model -> Model
+clearQuery model =
+    { model | timeline = arrange <| timeline model.current }
+
 subscriptions : Model -> Sub Msg
 subscriptions _ = Window.resizes WindowResized
 
@@ -130,6 +134,7 @@ update msg model =
              WindowResized size -> resizeWindow size
              CmdIssued (Scroll distance direction) -> updateCentralYear distance direction
              CmdIssued (RunQuery query) -> applyQuery query
+             CmdIssued ClearQuery -> clearQuery
     in (adjustForOverscroll <| updater model, Cmd.none)
 
 

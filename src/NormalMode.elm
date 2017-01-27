@@ -19,6 +19,8 @@ parseKeys keyCode isShiftDown =
     then Just <| Scroll (if isShiftDown then Far else Near) Right
     else if keyCode == four && isShiftDown
     then Just <| Scroll Farthest Right
+    else if keyCode == esc
+    then Just ClearQuery
     else if keyCode == f1
     then Just (RunQuery (HasTag Puritanism))
     else Nothing

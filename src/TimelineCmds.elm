@@ -9,3 +9,4 @@ type ScrollDistance = Near | Far | Farthest
 type TimelineCmd
   = Scroll ScrollDistance ScrollDirection 
   | RunQuery Query
+  | ClearQuery

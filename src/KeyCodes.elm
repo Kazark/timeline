@@ -38,3 +38,6 @@ six = 54
 
 f1 : KeyCode
 f1 = 112
+
+esc : KeyCode
+esc = 27
