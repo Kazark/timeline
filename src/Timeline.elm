@@ -1,16 +1,17 @@
-module Timeline exposing (Model, Msg, requestMove, update, init, view, subscriptions)
+module Timeline exposing (Model, Msg, issueCmd, update, init, view, subscriptions)
 
 import Collage exposing (Form, rect, filled, collage)
 import Element exposing (Element, widthOf, leftAligned)
 import History exposing (Life, Event, TimeSpan, Ymd, fromDate)
 import Data exposing (timeline)
-import Positioning exposing (ArrangedTimeline, arrange)
-import MoveCmds exposing (..)
+import Positioning exposing (..)
+import TimelineCmds exposing (..)
 import Colorscheme exposing (..)
 import Zoom exposing (..)
 import Util exposing (range, (|>>))
 import Window
 import Task
+import Query exposing (..)
 
 type alias Model =
     { timeline : ArrangedTimeline
@@ -26,10 +27,10 @@ type alias Model =
 
 type Msg
     = WindowResized Window.Size
-    | MovementRequested MoveCmd
+    | CmdIssued TimelineCmd
 
-requestMove : MoveCmd -> Msg
-requestMove = MovementRequested
+issueCmd : TimelineCmd -> Msg
+issueCmd = CmdIssued
 
 init : Ymd -> (Model, Cmd Msg)
 init current =
@@ -91,8 +92,8 @@ maxYear : Model -> Int
 maxYear model =
     model.centralYear + halfAxisInTimeUnits model
 
-updateCentralYear : MoveCmd -> Model -> Model
-updateCentralYear (Scroll distance direction) model =
+updateCentralYear : ScrollDistance -> ScrollDirection -> Model -> Model
+updateCentralYear distance direction model =
     let sign = case direction of
                    Left -> -1
                    Right -> 1
@@ -103,6 +104,10 @@ updateCentralYear (Scroll distance direction) model =
                 Farthest -> 1000000 --end
         centralYear = model.centralYear + (magnitude * model.scrollFactor * sign)
     in { model | centralYear = centralYear }
+
+applyQuery : Query -> Model -> Model
+applyQuery query model =
+    { model | timeline = rearrange <| runQuery query model.timeline }
 
 subscriptions : Model -> Sub Msg
 subscriptions _ = Window.resizes WindowResized
@@ -123,7 +128,8 @@ update msg model =
     let updater =
         case msg of
              WindowResized size -> resizeWindow size
-             MovementRequested moveCmd -> updateCentralYear moveCmd
+             CmdIssued (Scroll distance direction) -> updateCentralYear distance direction
+             CmdIssued (RunQuery query) -> applyQuery query
     in (adjustForOverscroll <| updater model, Cmd.none)
 
 

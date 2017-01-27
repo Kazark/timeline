@@ -42,7 +42,7 @@ update msg model =
                 (timeline, cmd) =
                     case maybeCmd of
                         Just cmd_ ->
-                            Timeline.update (Timeline.requestMove cmd_) model.timeline
+                            Timeline.update (Timeline.issueCmd cmd_) model.timeline
                         Nothing -> (model.timeline, Cmd.none)
             in ({ normalMode = normalMode, timeline = timeline }, cmd)
 

@@ -1,13 +1,15 @@
-module NormalMode exposing (Msg, Model, init, update, subscriptions, rebuildQuery)
+module NormalMode exposing (Msg, Model, init, update, subscriptions)
 
 import KeyCodes exposing (..)
 import Char exposing (KeyCode, toCode)
 import Set exposing (..)
 import Positioning exposing (ArrangedTimeline)
 import Keyboard
-import MoveCmds exposing (..)
+import TimelineCmds exposing (..)
+import Query exposing (..)
+import Tags exposing (..)
 
-parseKeys : KeyCode -> Bool -> Maybe MoveCmd
+parseKeys : KeyCode -> Bool -> Maybe TimelineCmd
 parseKeys keyCode isShiftDown =
     if leftArrow == keyCode || h == keyCode
     then Just <| Scroll (if isShiftDown then Far else Near) Left
@@ -17,6 +19,8 @@ parseKeys keyCode isShiftDown =
     then Just <| Scroll (if isShiftDown then Far else Near) Right
     else if keyCode == four && isShiftDown
     then Just <| Scroll Farthest Right
+    else if keyCode == f1
+    then Just (RunQuery (HasTag Puritanism))
     else Nothing
 
 type Msg
@@ -31,7 +35,7 @@ type alias Model =
 init : Model
 init = { isShiftDown = False }
 
-update : Msg -> Model -> (Model, Maybe MoveCmd)
+update : Msg -> Model -> (Model, Maybe TimelineCmd)
 update msg model =
     case msg of
         KeyDown key ->
@@ -49,7 +53,4 @@ subscriptions _ =
         [ Keyboard.downs KeyDown
         , Keyboard.ups KeyUp
         ]
-
-rebuildQuery : (ArrangedTimeline -> ArrangedTimeline) -> Set KeyCode -> (ArrangedTimeline -> ArrangedTimeline)
-rebuildQuery oldQry keycodes = oldQry
 

@@ -1,8 +1,11 @@
-module MoveCmds exposing (..)
+module TimelineCmds exposing (..)
+
+import Query exposing (..)
 
 type ScrollDirection = Left | Right
 
 type ScrollDistance = Near | Far | Farthest
 
-type MoveCmd
+type TimelineCmd
   = Scroll ScrollDistance ScrollDirection 
+  | RunQuery Query

@@ -1,4 +1,4 @@
-module Positioning exposing (ArrangedTimeline, arrange)
+module Positioning exposing (ArrangedTimeline, arrange, rearrange)
 
 import History exposing (..)
 import Tuple
@@ -91,3 +91,9 @@ arrange timeline =
         { lives = packedLives
         , events = packedEvents
         }
+
+rearrange : ArrangedTimeline -> ArrangedTimeline
+rearrange timeline =
+    { events = List.map Tuple.second timeline.events, lives = List.map Tuple.second timeline.lives }
+    |> arrange
+
