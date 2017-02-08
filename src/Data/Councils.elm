@@ -3,6 +3,11 @@ module Data.Councils exposing (councils)
 import Date exposing (..)
 import History exposing (..)
 
+-- Councils to research and add:
+--
+-- https://en.wikipedia.org/wiki/Ancient_church_councils_(pre-ecumenical)
+--
+
 councils : List Event
 councils =
   [ event (occurred <| duringYear  50              ) "Council of Jerusalem"

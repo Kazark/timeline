@@ -20,6 +20,14 @@ import History exposing (..)
 -- https://en.m.wikipedia.org/wiki/Salomon_van_Til
 -- https://en.m.wikipedia.org/wiki/William_Greenough_Thayer_Shedd
 -- https://en.m.wikipedia.org/wiki/Cyprian
+-- https://en.wikipedia.org/wiki/Pope_Leo_I
+-- https://en.wikipedia.org/wiki/Bede
+-- https://en.wikipedia.org/wiki/Thomas_Erastus
+-- https://en.wikipedia.org/wiki/Victor_of_Tunnuna
+-- https://en.wikipedia.org/wiki/Cassiodorus
+--
+-- For review:
+-- https://en.wikipedia.org/wiki/Prosper_of_Aquitaine
 --
 
 people : Ymd -> List Life
@@ -71,7 +79,7 @@ people current =
   , life (duringYear  1079       ) (on          1142 Apr 21) "Peter Abelard"
   , life (duringYear  1090       ) (on          1153 Aug 20) "Bernard of Clairvaux"
   , life (duringYear  1096       ) (duringMonth 1160 Jul   ) "Peter Lombard"
-  , life (duringYear  1096       ) (on          1141 Feb 11)" Hugh of Saint Victor"
+  , life (duringYear  1096       ) (on          1141 Feb 11) "Hugh of Saint Victor"
   , life (duringYear  1140       ) (duringYear  1205       ) "Peter Waldo"
   , life (duringYear  1185       ) (on          1245 Aug 21) "Alexander of Hales"
   , life (duringYear  1193       ) (duringYear  1280       ) "Albertus Magnus"
