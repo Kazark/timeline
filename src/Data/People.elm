@@ -25,6 +25,15 @@ import History exposing (..)
 -- https://en.wikipedia.org/wiki/Thomas_Erastus
 -- https://en.wikipedia.org/wiki/Victor_of_Tunnuna
 -- https://en.wikipedia.org/wiki/Cassiodorus
+-- Gilbert de la Porree (d. 1154)
+-- William of Auxerre (d. 1231)
+-- Alain of Lille (d. 1202)
+-- Ralph Cudworth
+-- Theophilus Gale
+-- Alcuin
+-- Rabanus Maurus
+-- Ratramnus
+-- Berengar of Tours
 --
 -- For review:
 -- https://en.wikipedia.org/wiki/Prosper_of_Aquitaine
