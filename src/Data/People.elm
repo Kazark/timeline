@@ -33,6 +33,21 @@ import History exposing (..)
 -- Alcuin
 -- Rabanus Maurus
 -- Ratramnus
+-- Andrew of St. Victor
+-- Giles of Rome
+-- Robert Kilwardby
+-- Robert Grosseteste
+-- William de la Mare
+-- Peter Aureole
+-- Haimo of Halberstadt
+-- Alphonsus Vargas
+-- Hervaeus Natalis
+-- Roger Bacon
+-- Stephen Harding
+-- Nicholas Manjacoria
+-- Hugh of St Cher
+-- Anselm of Laon
+-- Stephen Langton
 -- Berengar of Tours
 --
 -- For review:
