@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "elm-format": "^0.8.3",
+    "elm-upgrade": "^0.19.8",
     "watch": "^0.16.0"
   }
 }
