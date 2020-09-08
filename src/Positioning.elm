@@ -3,6 +3,7 @@ module Positioning exposing (ArrangedTimeline, arrange)
 import History exposing (..)
 import Tuple
 
+
 type alias ArrangedTimeline =
     { lives : List ( Int, Life )
     , events : List ( Int, Event )
@@ -18,13 +19,14 @@ findNextLife ( layerNum, life ) lives =
                     ( layer, unlayered ) =
                         findNextLife ( layerNum, next ) rest
                 in
-                    ( ( layerNum, life ) :: layer, unlayered )
+                ( ( layerNum, life ) :: layer, unlayered )
+
             else
                 let
                     ( layer, unlayered ) =
                         findNextLife ( layerNum, life ) rest
                 in
-                    ( layer, next :: unlayered )
+                ( layer, next :: unlayered )
 
         [] ->
             ( [ ( layerNum, life ) ], [] )
@@ -64,7 +66,7 @@ findEventLayer levent ( events, packedLives ) =
         layer =
             findEventLayer_ packedLives eventWithRoom
     in
-        ( ( layer, levent ) :: events, ( layer, eventWithRoom ) :: packedLives )
+    ( ( layer, levent ) :: events, ( layer, eventWithRoom ) :: packedLives )
 
 
 packEventLayers_ : List Event -> List ( Int, TimeSpan ) -> List ( Int, Event )
@@ -88,6 +90,6 @@ arrange timeline =
         packedEvents =
             packEventLayers timeline.events packedLives
     in
-        { lives = packedLives
-        , events = packedEvents
-        }
+    { lives = packedLives
+    , events = packedEvents
+    }

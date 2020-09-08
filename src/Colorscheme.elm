@@ -1,7 +1,7 @@
 module Colorscheme exposing (..)
 
-import Color exposing (..)
 import Collage exposing (..)
+import Color exposing (..)
 import Text exposing (..)
 
 

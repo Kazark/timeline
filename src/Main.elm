@@ -1,11 +1,11 @@
 module Main exposing (main)
 
-import Html
-import RootComponent
-import Window
 import Element exposing (Element)
+import Html
 import Keyboard
+import RootComponent
 import Time exposing (Time)
+import Window
 
 
 main : Program Time RootComponent.Model RootComponent.Msg

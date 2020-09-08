@@ -1,16 +1,17 @@
-module Timeline exposing (Model, Msg, requestMove, update, init, view, subscriptions)
+module Timeline exposing (Model, Msg, init, requestMove, subscriptions, update, view)
 
-import Collage exposing (Form, rect, filled, collage)
-import Element exposing (Element, widthOf, leftAligned)
-import History exposing (Life, Event, TimeSpan, Ymd, fromDate)
-import Data exposing (timeline)
-import Positioning exposing (ArrangedTimeline, arrange)
-import MoveCmds exposing (..)
+import Collage exposing (Form, collage, filled, rect)
 import Colorscheme exposing (..)
-import Zoom exposing (..)
-import Util exposing (range, (|>>))
-import Window
+import Data exposing (timeline)
+import Element exposing (Element, leftAligned, widthOf)
+import History exposing (Event, Life, TimeSpan, Ymd, fromDate)
+import MoveCmds exposing (..)
+import Positioning exposing (ArrangedTimeline, arrange)
 import Task
+import Util exposing ((|>>), range)
+import Window
+import Zoom exposing (..)
+
 
 type alias Model =
     { timeline : ArrangedTimeline
@@ -24,14 +25,18 @@ type alias Model =
     , current : Ymd
     }
 
+
 type Msg
     = WindowResized Window.Size
     | MovementRequested MoveCmd
 
-requestMove : MoveCmd -> Msg
-requestMove = MovementRequested
 
-init : Ymd -> (Model, Cmd Msg)
+requestMove : MoveCmd -> Msg
+requestMove =
+    MovementRequested
+
+
+init : Ymd -> ( Model, Cmd Msg )
 init current =
     ( { timeline = arrange <| timeline current
       , centralYear = 1650
@@ -54,7 +59,7 @@ pixelsToTimeUnits model pixels =
 
 halfScreenInPixels : Model -> Float
 halfScreenInPixels model =
-    (toFloat model.width) / 2.0
+    toFloat model.width / 2.0
 
 
 halfScreenInTimeUnits : Model -> Float
@@ -83,48 +88,80 @@ halfAxisInTimeUnits model =
         |> downTimeUnits model
         |> round
 
+
 minYear : Model -> Int
 minYear model =
     model.centralYear - halfAxisInTimeUnits model
+
 
 maxYear : Model -> Int
 maxYear model =
     model.centralYear + halfAxisInTimeUnits model
 
+
 updateCentralYear : MoveCmd -> Model -> Model
 updateCentralYear (Scroll distance direction) model =
-    let sign = case direction of
-                   Left -> -1
-                   Right -> 1
+    let
+        sign =
+            case direction of
+                Left ->
+                    -1
+
+                Right ->
+                    1
+
         magnitude =
             case distance of
-                Near -> 1
-                Far -> 10
-                Farthest -> 1000000 --end
-        centralYear = model.centralYear + (magnitude * model.scrollFactor * sign)
-    in { model | centralYear = centralYear }
+                Near ->
+                    1
+
+                Far ->
+                    10
+
+                Farthest ->
+                    1000000
+
+        --end
+        centralYear =
+            model.centralYear + (magnitude * model.scrollFactor * sign)
+    in
+    { model | centralYear = centralYear }
+
 
 subscriptions : Model -> Sub Msg
-subscriptions _ = Window.resizes WindowResized
+subscriptions _ =
+    Window.resizes WindowResized
+
 
 resizeWindow : Window.Size -> Model -> Model
-resizeWindow size model = { model | width = size.width - 30, height = size.height }
+resizeWindow size model =
+    { model | width = size.width - 30, height = size.height }
+
 
 adjustForOverscroll : Model -> Model
 adjustForOverscroll model =
-  if maxYear model > model.current.year then
-    { model | centralYear = model.current.year - halfAxisInTimeUnits model }
-  else if minYear model < model.scrollFactor then
-    { model | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
-  else model
+    if maxYear model > model.current.year then
+        { model | centralYear = model.current.year - halfAxisInTimeUnits model }
+
+    else if minYear model < model.scrollFactor then
+        { model | centralYear = model.scrollFactor + halfAxisInTimeUnits model }
+
+    else
+        model
+
 
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
-    let updater =
-        case msg of
-             WindowResized size -> resizeWindow size
-             MovementRequested moveCmd -> updateCentralYear moveCmd
-    in (adjustForOverscroll <| updater model, Cmd.none)
+    let
+        updater =
+            case msg of
+                WindowResized size ->
+                    resizeWindow size
+
+                MovementRequested moveCmd ->
+                    updateCentralYear moveCmd
+    in
+    ( adjustForOverscroll <| updater model, Cmd.none )
 
 
 tickOffsets : Model -> List ( Int, Float )
@@ -139,7 +176,7 @@ tickOffsets model =
                     y =
                         downTimeUnits model x
                 in
-                    ( round y, y * model.unit )
+                ( round y, y * model.unit )
             )
 
 
@@ -147,15 +184,15 @@ drawTick : Model -> Int -> Float -> List Form
 drawTick model year xpos =
     let
         vradius =
-            (toFloat model.height) / 2.0
+            toFloat model.height / 2.0
 
         h =
             model.unit * 0.5
     in
-        [ vLineSegment model.colorscheme ( xpos, vradius ) ( xpos, -vradius )
-        , axisSegment model.colorscheme ( xpos, -h ) ( xpos, h )
-        , yearLabel model.colorscheme xpos year
-        ]
+    [ vLineSegment model.colorscheme ( xpos, vradius ) ( xpos, -vradius )
+    , axisSegment model.colorscheme ( xpos, -h ) ( xpos, h )
+    , yearLabel model.colorscheme xpos year
+    ]
 
 
 drawTicks : Model -> Int -> Float -> List Form
@@ -176,8 +213,8 @@ drawTimeAxis model =
         minYearPos =
             (toFloat <| halfAxisInTimeUnits model) * -model.unit
     in
-        axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
-            :: drawTicks model minYear_ minYearPos
+    axisSegment model.colorscheme ( -xmax, 0.0 ) ( xmax, 0.0 )
+        :: drawTicks model minYear_ minYearPos
 
 
 placeYear : Model -> Int -> Float
@@ -191,13 +228,14 @@ vSignAndLayer index =
         vSign =
             if index % 2 == 0 then
                 1
+
             else
                 -1
 
         layer =
             vSign * index // 2
     in
-        ( vSign, layer )
+    ( vSign, layer )
 
 
 layerHeight : Model -> Int -> Int -> Float
@@ -209,6 +247,7 @@ labelHeight : Model -> Int -> Float -> Float
 labelHeight model vSign height =
     if vSign == 1 then
         height + model.unit
+
     else
         height - (0.6 * model.unit)
 
@@ -240,11 +279,11 @@ drawTimeSpan model ( index, life ) =
         labelAtY =
             labelHeight model vSign height
     in
-        [ spanSegment model.colorscheme ( begin, height ) ( end, height )
-        , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
-        , spanSegment model.colorscheme ( end, heightPlus ) ( end, heightMinus )
-        , spanLabel model.colorscheme labelAtX labelAtY life.name
-        ]
+    [ spanSegment model.colorscheme ( begin, height ) ( end, height )
+    , spanSegment model.colorscheme ( begin, heightPlus ) ( begin, heightMinus )
+    , spanSegment model.colorscheme ( end, heightPlus ) ( end, heightMinus )
+    , spanLabel model.colorscheme labelAtX labelAtY life.name
+    ]
 
 
 drawLabeledEvent : Model -> ( Int, Event ) -> List Form
@@ -276,10 +315,11 @@ drawLabeledEvent model ( index, levent ) =
                 diff =
                     xposR - xposL
             in
-                if diff > 100.0 then
-                    5.0
-                else
-                    (100.0 - diff) / 2.0
+            if diff > 100.0 then
+                5.0
+
+            else
+                (100.0 - diff) / 2.0
 
         labelUnderline =
             eventUnderline model.colorscheme ( xposL - wing, height ) ( xposR + wing, height )
@@ -290,7 +330,7 @@ drawLabeledEvent model ( index, levent ) =
         dateMarkerR =
             eventSegment model.colorscheme ( xposR, height ) ( xposR, 0.0 )
     in
-        [ label, labelUnderline, dateMarkerL, dateMarkerR ]
+    [ label, labelUnderline, dateMarkerL, dateMarkerR ]
 
 
 isOnScreen : Model -> TimeSpan -> Bool
@@ -307,8 +347,8 @@ drawTimeline model =
         eventLayers =
             List.filter (Tuple.second >> .when >> isOnScreen model) model.timeline.events
     in
-        (List.concatMap (drawTimeSpan model) timeSpanLayers)
-            ++ (List.concatMap (drawLabeledEvent model) eventLayers)
+    List.concatMap (drawTimeSpan model) timeSpanLayers
+        ++ List.concatMap (drawLabeledEvent model) eventLayers
 
 
 background : Model -> List Form
